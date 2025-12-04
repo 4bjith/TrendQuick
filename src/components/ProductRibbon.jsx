@@ -1,0 +1,138 @@
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import api from "../api/axiosClient";
+import { useEffect, useState } from "react";
+import { FaShoppingCart } from "react-icons/fa";
+
+export default function ProductRibbon() {
+  const [items, setItems] = useState([]);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["products", 1, 10],
+    queryFn: async () => {
+      const res = await api.get("/product?page=1&limit=10");
+      return res.data;
+    },
+  });
+
+  useEffect(() => {
+    if (data?.data) {
+      setItems(data.data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <p className="text-center py-10">Loading products...</p>;
+  }
+
+  if (isError) {
+    return (
+      <p className="text-center py-10 text-red-600">
+        Failed to load products.
+      </p>
+    );
+  }
+
+  return (
+    <div className="w-full py-10 bg-white text-black">
+      {/* ---------- Heading Section ---------- */}
+      <div className="max-w-6xl mx-auto px-4 mb-10">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-5">
+          {/* Heading Left */}
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold">
+              Featured Products
+            </h1>
+            <p className="text-gray-500 mt-2 text-sm sm:text-base">
+              Discover our handpicked collection of premium products designed
+              for quality and style.
+            </p>
+          </div>
+
+          {/* View All Button */}
+          <Link to="/products/all" className="self-start sm:self-center">
+            <button className="flex items-center gap-2 border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition w-fit text-sm sm:text-base">
+              View All Products →
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* ---------- Product Grid ---------- */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-20">
+        {items.slice(0, 4).map((item) => (
+          <div
+            key={item._id}
+            className=" h-[380px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+          >
+            {/* Product Image */}
+            <div className="relative">
+              <img
+                src={item.image || "https://via.placeholder.com/400"}
+                alt={item.title}
+                className="w-full h-[180px] sm:h-[200px] object-cover"
+              />
+
+              {item.discount && (
+                <span className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 text-xs rounded-lg">
+                  -{item.discount}%
+                </span>
+              )}
+            </div>
+
+            {/* Info Section */}
+            <div className="p-4">
+              <p className="uppercase text-xs text-gray-500 tracking-wide">
+                {item.catagory?.catagoryName || "Category"}
+              </p>
+
+              <h2 className="font-semibold text-lg mt-1 leading-tight line-clamp-2">
+                {item.title}
+              </h2>
+
+              {/* Rating */}
+              <div className="flex items-center text-yellow-500 text-sm mt-1">
+                ⭐ {item.rating || "4.5"}
+              </div>
+
+              {/* Price */}
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <p className="text-blue-900 text-lg font-bold">
+                  ₹{item.price}
+                </p>
+
+                {item.oldPrice && (
+                  <p className="line-through text-gray-400 text-sm">
+                    ₹{item.oldPrice}
+                  </p>
+                )}
+              </div>
+
+              {/* Add Button */}
+              <button className="mt-4 w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                <FaShoppingCart size={15} /> Add
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ---------- Explore Collection Box ---------- */}
+      <div className="max-w-6xl mx-auto bg-gray-100 rounded-2xl p-8 sm:p-10 mt-16 text-center">
+        <h2 className="text-xl sm:text-2xl font-bold">
+          Explore Our Full Collection
+        </h2>
+        <p className="text-gray-600 mt-2 text-sm sm:text-base">
+          Browse hundreds of carefully selected products across multiple
+          categories. Find exactly what you're looking for.
+        </p>
+
+        <Link to="/products">
+          <button className="bg-black text-white px-6 py-3 mt-5 rounded-lg hover:bg-gray-700 transition flex items-center mx-auto gap-2 text-sm sm:text-base">
+            Shop Now →
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
+}
