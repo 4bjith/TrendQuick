@@ -26,10 +26,10 @@ export default function SingleProduct() {
     enabled: !!id,
   });
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
+  if (isLoading) return <div className="text-center py-10 bg-cream min-h-screen">Loading...</div>;
   if (isError)
     return (
-      <div className="text-center py-10 text-red-500">
+      <div className="text-center py-10 text-red-500 bg-cream min-h-screen">
         Error loading product
       </div>
     );
@@ -46,14 +46,14 @@ export default function SingleProduct() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
+    <div className="w-full min-h-screen bg-cream">
       <Navbar />
 
       {/* Product Container */}
       <div className="w-full flex flex-col lg:flex-row justify-center items-start gap-10 px-6 lg:px-20 py-10">
         {/* LEFT IMAGE */}
         <div className="w-full lg:w-1/3 flex justify-center">
-          <div className="w-full max-w-md h-[380px] bg-white shadow-lg rounded-xl overflow-hidden">
+          <div className="w-full max-w-md h-[380px] bg-white shadow-lg rounded-xl overflow-hidden border border-green-light">
             <img
               src={product.image}
               alt={product.title}
@@ -63,38 +63,38 @@ export default function SingleProduct() {
         </div>
 
         {/* RIGHT SIDE DETAILS */}
-        <div className="w-full lg:w-1/2 bg-white shadow-md rounded-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-900">{product.title}</h1>
+        <div className="w-full lg:w-1/2 bg-white/90 shadow-md rounded-xl p-8 border border-green-light">
+          <h1 className="text-3xl font-bold text-green-dark">{product.title}</h1>
 
           <div className="flex items-center gap-2 mt-2">
             <span className="text-yellow-500 text-xl">⭐</span>
-            <span className="text-gray-700">{product.rating || "4.5"} / 5</span>
+            <span className="text-green-dark/80">{product.rating || "4.5"} / 5</span>
           </div>
 
-          <p className="text-3xl font-semibold text-gray-800 mt-4">
+          <p className="text-3xl font-semibold text-green-dark mt-4">
             ₹ {product.price}
           </p>
 
-          <p className="text-gray-600 mt-6 leading-relaxed">
+          <p className="text-green-dark/70 mt-6 leading-relaxed">
             {product.description || "No description available"}
           </p>
 
-          <p className="text-sm mt-5 text-gray-500">
+          <p className="text-sm mt-5 text-green-dark/60">
             Category:{" "}
-            <span className="font-medium">
+            <span className="font-medium text-green-dark">
               {product.catagory?.catagoryName}
             </span>
           </p>
 
           {/* Buttons */}
           <div className="mt-8 flex gap-4">
-            <button className="w-40 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition">
+            <button className="w-40 py-3 bg-green-dark text-cream font-semibold rounded-lg hover:bg-green-medium transition shadow-md">
               Buy Now
             </button>
 
             <button
               onClick={handleAddToCart}
-              className="w-40 py-3 border border-black text-black font-semibold rounded-lg hover:bg-black hover:text-white transition"
+              className="w-40 py-3 border border-green-dark text-green-dark font-semibold rounded-lg hover:bg-green-dark hover:text-cream transition shadow-sm"
             >
               Add to Cart
             </button>

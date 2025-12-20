@@ -40,7 +40,7 @@ function Home() {
 
   return (
     <>
-      <div className="w-full h-auto">
+      <div className="w-full h-auto bg-cream">
         {/* Navbar section */}
         <Navbar />
 
@@ -66,7 +66,7 @@ function Home() {
           {/* Content - Left Aligned */}
           <div className="absolute inset-0 flex items-center px-10 md:px-20">
             <div className="text-white max-w-xl space-y-6 z-10 animate-fade-in-up">
-              <h3 className="text-xl md:text-2xl font-medium text-yellow-400 uppercase tracking-widest">
+              <h3 className="text-xl md:text-2xl font-medium text-green-light uppercase tracking-widest">
                 {slides[currentSlide].subtitle}
               </h3>
               <h1 className="text-5xl md:text-7xl font-bold leading-tight drop-shadow-lg">
@@ -75,7 +75,7 @@ function Home() {
               <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
                 {slides[currentSlide].description}
               </p>
-              <button className="mt-8 px-8 py-3 bg-white text-black font-bold text-lg rounded-full hover:bg-yellow-400 hover:scale-105 transition-all duration-300 shadow-lg">
+              <button className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
                 Shop Now
               </button>
             </div>
@@ -87,7 +87,7 @@ function Home() {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-yellow-400 w-8" : "bg-white/50 w-3 hover:bg-white"
+                className={`h-3 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-green-light w-8" : "bg-white/50 w-3 hover:bg-white"
                   }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

@@ -44,10 +44,10 @@ export default function AllProducts() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-cream">
         <Navbar />
         <div className="flex-1 flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-medium"></div>
         </div>
         <Footer />
       </div>
@@ -56,7 +56,7 @@ export default function AllProducts() {
 
   if (isError) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-cream">
         <Navbar />
         <div className="flex-1 flex justify-center items-center text-red-600">
           Error loading products. Please try again later.
@@ -71,14 +71,14 @@ export default function AllProducts() {
   const prevPage = () => page > 1 && setPage(page - 1);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-cream">
       <Navbar />
 
       {/* PAGE HEADER */}
-      <section className="w-full bg-linear-to-r from-gray-100 to-white py-10 px-4 text-center md:text-left">
+      <section className="w-full bg-white/50 backdrop-blur-sm py-10 px-4 text-center md:text-left border-b border-green-light">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900">Shop Our Collection</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-4xl font-bold text-green-dark">Shop Our Collection</h1>
+          <p className="text-green-dark/70 mt-2">
             Discover {products?.total} amazing products
           </p>
         </div>
@@ -87,26 +87,27 @@ export default function AllProducts() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-10">
 
         {/* SIDEBAR */}
-        <aside className="hidden md:block w-64 shrink-0 border-r pr-6">
-          <h3 className="font-semibold text-gray-700 mb-4">Filters</h3>
+        <aside className="hidden md:block w-64 shrink-0 border-r border-green-light pr-6">
+          <h3 className="font-semibold text-green-dark mb-4">Filters</h3>
 
           {/* Categories */}
           <div>
-            <h4 className="font-bold text-gray-900 mb-2">Categories</h4>
-            <div className="flex flex-col gap-2 text-gray-700">
+            <h4 className="font-bold text-green-dark mb-2">Categories</h4>
+            <div className="flex flex-col gap-2 text-green-dark/80">
 
               {cate.length === 0 && (
-                <p className="text-gray-500 text-sm">No categories found</p>
+                <p className="text-green-dark/50 text-sm">No categories found</p>
               )}
 
               {cate.map((c) => (
-                <label key={c._id} className="flex items-center gap-2 capitalize">
+                <label key={c._id} className="flex items-center gap-2 capitalize cursor-pointer hover:text-green-dark transition-colors">
                   <input
                     type="checkbox"
                     checked={select === c.catagoryName}
                     onChange={() =>
                       setSelect(select === c.catagoryName ? "" : c.catagoryName)
                     }
+                    className="accent-green-medium"
                   />
                   {c.catagoryName}
                 </label>
@@ -114,41 +115,41 @@ export default function AllProducts() {
             </div>
           </div>
 
-          <hr className="my-6" />
+          <hr className="my-6 border-green-light" />
 
           {/* Price Filter */}
           <div>
-            <h4 className="font-bold text-gray-900 mb-2">Price Range</h4>
-            <input type="range" className="w-full accent-blue-600" />
-            <div className="flex justify-between text-sm text-gray-600 mt-1">
+            <h4 className="font-bold text-green-dark mb-2">Price Range</h4>
+            <input type="range" className="w-full accent-green-medium" />
+            <div className="flex justify-between text-sm text-green-dark/70 mt-1">
               <span>$0</span>
               <span>$500</span>
             </div>
           </div>
 
-          <hr className="my-6" />
+          <hr className="my-6 border-green-light" />
         </aside>
 
         {/* RIGHT CONTENT SECTION */}
         <section className="flex-1 w-full">
 
           {/* TOP BAR */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 border p-4 rounded-xl bg-white shadow-sm">
-            <p className="text-gray-700 text-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 border border-green-light p-4 rounded-xl bg-white/60 shadow-sm">
+            <p className="text-green-dark text-sm">
               Showing {products?.data?.length} products
             </p>
 
             <div className="flex items-center gap-4">
-              <select className="border rounded-lg px-3 py-2 text-sm text-gray-700">
+              <select className="border border-green-light rounded-lg px-3 py-2 text-sm text-green-dark bg-white focus:outline-none focus:ring-1 focus:ring-green-medium">
                 <option>Sort By</option>
                 <option>Price: Low → High</option>
                 <option>Price: High → Low</option>
               </select>
 
-              <button className="p-2 border rounded-lg">
+              <button className="p-2 border border-green-light rounded-lg text-green-dark hover:bg-green-light/20 transition">
                 <FiGrid />
               </button>
-              <button className="p-2 border rounded-lg">
+              <button className="p-2 border border-green-light rounded-lg text-green-dark hover:bg-green-light/20 transition">
                 <FiList />
               </button>
             </div>
@@ -179,8 +180,6 @@ export default function AllProducts() {
                   image={item.image}
                   discount={item.discount}
                   catagory={item.catagory?.catagoryName}
-                  priceColor="text-blue-600"
-                  buttonColor="bg-blue-600 hover:bg-blue-700"
                 />
               ))}
           </div>
@@ -190,27 +189,25 @@ export default function AllProducts() {
             <button
               onClick={prevPage}
               disabled={page === 1}
-              className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${
-                page === 1
+              className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${page === 1
                   ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "text-blue-600 border-blue-600 hover:bg-blue-50"
-              }`}
+                  : "text-green-dark border-green-dark hover:bg-green-light/20"
+                }`}
             >
               ← Previous
             </button>
 
-            <span className="px-4 py-2 text-sm font-semibold text-gray-700">
+            <span className="px-4 py-2 text-sm font-semibold text-green-dark">
               Page {page} of {totalPages}
             </span>
 
             <button
               onClick={nextPage}
               disabled={page === totalPages}
-              className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${
-                page === totalPages
+              className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${page === totalPages
                   ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "text-blue-600 border-blue-600 hover:bg-blue-50"
-              }`}
+                  : "text-green-dark border-green-dark hover:bg-green-light/20"
+                }`}
             >
               Next →
             </button>

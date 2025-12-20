@@ -9,6 +9,15 @@ import Cart from "./pages/Cart";
 import AllProducts from "./pages/AllProducts";
 import Checkout from "./pages/Checkout";
 
+// Admin Imports
+import AdminDashboard from "./admin/AdminDashboard";
+import AdminProducts from "./admin/AdminProducts";
+import AdminCreateProduct from "./admin/AdminCreateProduct";
+import AdminUpdateProduct from "./admin/AdminUpdateProduct";
+import AdminCategories from "./admin/AdminCategories";
+import AdminOrders from "./admin/AdminOrders";
+import AdminAnalytics from "./admin/AdminAnalytics";
+
 function Router() {
   return (
     <BrowserRouter>
@@ -21,6 +30,18 @@ function Router() {
         <Route path="/item" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<AdminAnalytics />} />
+          <Route path="sales-analytics" element={<AdminAnalytics />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="products/create" element={<AdminCreateProduct />} />
+          <Route path="products/edit/:id" element={<AdminUpdateProduct />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="orders" element={<AdminOrders />} />
+        </Route>
+
       </Routes>
       <ToastContainer />
     </BrowserRouter>
