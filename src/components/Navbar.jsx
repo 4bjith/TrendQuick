@@ -27,13 +27,12 @@ export default function Navbar(prop) {
 
   return (
     <nav
-      className={`w-full ${
-        prop.height || "h-[10vh]"
-      } flex justify-between items-center px-8 bg-white shadow-sm text-[1rem] font-medium text-gray-800 relative z-50`}
+      className={`w-full ${prop.height || "h-[10vh]"
+        } flex justify-between items-center px-8 bg-green-dark shadow-sm text-[1rem] font-medium text-cream relative z-50`}
     >
       {/* Logo */}
       <div className="flex items-center">
-        <h1 className="font-bold tracking-wider cursor-pointer text-2xl text-black">
+        <h1 className="font-bold tracking-wider cursor-pointer text-2xl text-cream">
           TrendQuik
         </h1>
       </div>
@@ -80,9 +79,9 @@ export default function Navbar(prop) {
         <Link to={"/login"} className="hover:text-black transition-colors">
           Sign in
         </Link>
-        <div className="flex items-center gap-2  px-4 py-2 rounded-full cursor-pointer hover:bg-gray-100 transition-colors shadow-md">
+        <div className="flex items-center gap-2  px-4 py-2 rounded-full cursor-pointer text-cream bg-green-medium hover:bg-green-dark transition-colors shadow-md">
           <TiUser className="text-lg text-black" />
-          <span className="text-sm font-semibold text-black">
+          <span className="text-sm font-semibold text-cream">
             {user?.name || "user_name"}
           </span>
         </div>
@@ -100,7 +99,7 @@ export default function Navbar(prop) {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="absolute top-[10vh] left-0 w-full bg-white shadow-lg flex flex-col items-center gap-6 py-8 lg:hidden animate-fade-in-down">
+        <div className="absolute top-[10vh] left-0 w-full bg-cream shadow-lg flex flex-col items-center gap-6 py-8 lg:hidden animate-fade-in-down z-50">
           <Link
             to={"/"}
             className="text-lg hover:text-black transition-colors"
@@ -143,7 +142,7 @@ export default function Navbar(prop) {
           >
             Cart
           </Link>
-          <div className="w-full border-t border-gray-100 my-2"></div>
+          <div className="w-full border-t border-green-medium my-2"></div>
           <Link
             to={"/login"}
             className="text-lg hover:text-black transition-colors"
@@ -151,7 +150,7 @@ export default function Navbar(prop) {
           >
             Sign in
           </Link>
-          <div className="flex items-center gap-2 px-6 py-2 rounded-full cursor-pointer hover:bg-gray-800 transition-colors shadow-md">
+          <div className="flex items-center gap-2 px-6 py-2 rounded-full cursor-pointer hover:bg-green-medium transition-colors shadow-md bg-green-light">
             <TiUser className="text-lg text-black " />
             <span className="text-sm font-semibold text-black">
               {user ? user.name : "user_name"}

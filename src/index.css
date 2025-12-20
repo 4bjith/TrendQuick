@@ -44,3 +44,10 @@
     }
   }
 }
+
+@theme {
+  --color-cream: #F6F0D7;
+  --color-green-light: #C5D89D;
+  --color-green-medium: #9CAB84;
+  --color-green-dark: #89986D;
+}

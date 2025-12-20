@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
+import { BASE_URL } from "../api/url";
 
 export default function CategoryRibbon() {
   const [categories, setCategories] = useState([]);
@@ -20,14 +21,14 @@ export default function CategoryRibbon() {
   }, []);
 
   return (
-    <div className="w-full py-10 bg-white text-black px-6 sm:px-10 md:px-0">
+    <div className="w-full py-10 bg-cream text-green-dark px-6 sm:px-10 md:px-0">
       {/* Section Heading */}
       <div className="flex flex-col items-center mb-10 text-center">
-        <p className="text-sm tracking-widest text-blue-600 font-semibold">
+        <p className="text-sm tracking-widest text-green-medium font-semibold">
           SHOP BY CATEGORY
         </p>
-        <h1 className="text-3xl sm:text-4xl font-bold mt-2">Popular Categories</h1>
-        <p className="text-gray-500 mt-2 max-w-lg">
+        <h1 className="text-3xl sm:text-4xl font-bold mt-2 text-green-dark">Popular Categories</h1>
+        <p className="text-green-dark/70 mt-2 max-w-lg">
           Browse our most popular product categories and find exactly what you need.
         </p>
       </div>
@@ -37,12 +38,12 @@ export default function CategoryRibbon() {
         {categories.slice(0, 3).map((item) => (
           <div
             key={item._id}
-            className="relative h-[300px] sm:h-[340px] rounded-xl overflow-hidden shadow-md group cursor-pointer"
+            className="relative h-[300px] sm:h-[340px] rounded-xl overflow-hidden shadow-md group cursor-pointer border border-green-light"
           >
             {/* Background Image */}
             <img
               src={
-                item.catagoryImage ||
+                item.catagoryImage?.startsWith('http')?item.catagoryImage : `${BASE_URL}/${item.catagoryImage}` ||
                 "https://via.placeholder.com/300x300?text=No+Image"
               }
               alt={item.catagoryName}
@@ -53,7 +54,7 @@ export default function CategoryRibbon() {
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
 
             {/* Bottom Text + Icon */}
-            <div className="absolute bottom-5 left-5 flex items-center gap-2 text-white font-medium text-lg">
+            <div className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
               <span>{item.catagoryName}</span>
               <IoMdArrowRoundForward className="text-2xl group-hover:translate-x-1 transition-transform" />
             </div>
@@ -64,32 +65,32 @@ export default function CategoryRibbon() {
       {/* Feature Icons Section */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 px-6 sm:px-0">
         {/* Single Feature */}
-        <div className="p-6 bg-white rounded-xl shadow text-center">
-          <div className="w-12 h-12 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-green-600 text-2xl">
+        <div className="p-6 bg-green-medium rounded-xl shadow text-center">
+          <div className="w-12 h-12 mx-auto rounded-full bg-cream flex items-center justify-center text-green-dark text-2xl">
             ⚡
           </div>
-          <h3 className="mt-4 font-semibold text-lg">Fast Delivery</h3>
-          <p className="text-gray-500 text-sm mt-1">
+          <h3 className="mt-4 font-semibold text-lg text-cream  ">Fast Delivery</h3>
+          <p className="text-cream/90 text-sm mt-1">
             Get your orders delivered quickly to your doorstep.
           </p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow text-center">
-          <div className="w-12 h-12 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-green-600 text-2xl">
+        <div className="p-6 bg-green-medium rounded-xl shadow text-center">
+          <div className="w-12 h-12 mx-auto rounded-full bg-cream flex items-center justify-center text-green-dark text-2xl">
             🏅
           </div>
-          <h3 className="mt-4 font-semibold text-lg">Quality Assured</h3>
-          <p className="text-gray-500 text-sm mt-1">
+          <h3 className="mt-4 font-semibold text-lg text-cream ">Quality Assured</h3>
+          <p className="text-cream/90  text-sm mt-1">
             All products are carefully selected for quality and durability.
           </p>
         </div>
 
-        <div className="p-6 bg-white rounded-xl shadow text-center">
-          <div className="w-12 h-12 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-green-600 text-2xl">
+        <div className="p-6 bg-green-medium rounded-xl shadow text-center">
+          <div className="w-12 h-12 mx-auto rounded-full bg-cream flex items-center justify-center text-green-dark text-2xl">
             👤
           </div>
-          <h3 className="mt-4 font-semibold text-lg">Customer Support</h3>
-          <p className="text-gray-500 text-sm mt-1">
+          <h3 className="mt-4 font-semibold text-lg text-cream ">Customer Support</h3>
+          <p className="text-cream/90  text-sm mt-1">
             Our team is here to help with any questions or concerns.
           </p>
         </div>

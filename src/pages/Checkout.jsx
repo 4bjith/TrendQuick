@@ -50,14 +50,16 @@ export default function Checkout() {
         navigate("/"); // redirect to home after checkout
     };
 
+    const inputClasses = "w-full px-4 py-3 bg-white/70 backdrop-blur-sm rounded-lg border border-green-light focus:outline-none focus:ring-2 focus:ring-green-medium transition text-green-dark placeholder-green-dark/50";
+
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
+        <div className="min-h-screen flex flex-col bg-cream">
             {/* ---------- Navbar ---------- */}
             <Navbar />
 
             {/* ---------- Main Content ---------- */}
             <main className="flex-grow container mx-auto px-4 py-12">
-                <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-10 drop-shadow-md">
+                <h1 className="text-4xl font-extrabold text-center text-green-dark mb-10 drop-shadow-md">
                     Checkout
                 </h1>
 
@@ -66,8 +68,8 @@ export default function Checkout() {
                     className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto"
                 >
                     {/* ----- Shipping Address ----- */}
-                    <section className="bg-white/30 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-white/20">
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                    <section className="bg-white/40 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-white/40">
+                        <h2 className="text-2xl font-semibold text-green-dark mb-6">
                             Shipping Address
                         </h2>
 
@@ -79,7 +81,7 @@ export default function Checkout() {
                                 value={shipping.fullName}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                             <input
                                 type="tel"
@@ -88,7 +90,7 @@ export default function Checkout() {
                                 value={shipping.phone}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                             <input
                                 type="text"
@@ -97,7 +99,7 @@ export default function Checkout() {
                                 value={shipping.address1}
                                 onChange={handleShippingChange}
                                 required
-                                className="input col-span-2"
+                                className={`${inputClasses} col-span-2`}
                             />
                             <input
                                 type="text"
@@ -105,7 +107,7 @@ export default function Checkout() {
                                 placeholder="Address Line 2 (optional)"
                                 value={shipping.address2}
                                 onChange={handleShippingChange}
-                                className="input col-span-2"
+                                className={`${inputClasses} col-span-2`}
                             />
                             <input
                                 type="text"
@@ -114,7 +116,7 @@ export default function Checkout() {
                                 value={shipping.city}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                             <input
                                 type="text"
@@ -123,7 +125,7 @@ export default function Checkout() {
                                 value={shipping.state}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                             <input
                                 type="text"
@@ -132,7 +134,7 @@ export default function Checkout() {
                                 value={shipping.zip}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                             <input
                                 type="text"
@@ -141,14 +143,14 @@ export default function Checkout() {
                                 value={shipping.country}
                                 onChange={handleShippingChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                         </div>
                     </section>
 
                     {/* ----- Payment Details ----- */}
-                    <section className="bg-white/30 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-white/20">
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                    <section className="bg-white/40 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-white/40">
+                        <h2 className="text-2xl font-semibold text-green-dark mb-6">
                             Payment Details
                         </h2>
 
@@ -160,7 +162,7 @@ export default function Checkout() {
                                 value={payment.cardNumber}
                                 onChange={handlePaymentChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                                 maxLength={19}
                             />
                             <div className="grid gap-4 md:grid-cols-2">
@@ -171,7 +173,7 @@ export default function Checkout() {
                                     value={payment.expiry}
                                     onChange={handlePaymentChange}
                                     required
-                                    className="input"
+                                    className={inputClasses}
                                     maxLength={5}
                                 />
                                 <input
@@ -181,7 +183,7 @@ export default function Checkout() {
                                     value={payment.cvv}
                                     onChange={handlePaymentChange}
                                     required
-                                    className="input"
+                                    className={inputClasses}
                                     maxLength={4}
                                 />
                             </div>
@@ -192,7 +194,7 @@ export default function Checkout() {
                                 value={payment.nameOnCard}
                                 onChange={handlePaymentChange}
                                 required
-                                className="input"
+                                className={inputClasses}
                             />
                         </div>
                     </section>
@@ -200,7 +202,7 @@ export default function Checkout() {
                     {/* ----- Submit Button ----- */}
                     <button
                         type="submit"
-                        className="col-span-2 mt-6 w-full py-4 bg-gradient-to-r from-indigo-600 to-pink-600 text-white font-bold rounded-xl hover:from-indigo-500 hover:to-pink-500 transition-all transform hover:scale-105 shadow-lg"
+                        className="col-span-2 mt-6 w-full py-4 bg-green-dark text-cream font-bold rounded-xl hover:bg-green-medium transition-all transform hover:scale-105 shadow-lg"
                     >
                         Place Order
                     </button>
@@ -212,13 +214,3 @@ export default function Checkout() {
         </div>
     );
 }
-
-/* -------------------------------------------------
-   Tailwind utility class for consistent input styling.
-   Add this to your global CSS (index.css) if not present.
---------------------------------------------------- */
-{/*
-.input {
-  @apply w-full px-4 py-3 bg-white/70 backdrop-blur-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition;
-}
-*/}
