@@ -4,10 +4,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axiosClient';
 import { toast } from 'react-toastify';
 import { FaArrowLeft, FaSave, FaUpload } from 'react-icons/fa';
+import useUserStore from '../zustand/userStore';
 
 const AdminCreateProduct = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+    const token = useUserStore(state => state.token)
 
     const [formData, setFormData] = useState({
         title: '',
@@ -37,7 +39,13 @@ const AdminCreateProduct = () => {
             formData.append('title', data.title);
             formData.append('price', data.price);
             formData.append('description', data.description || '');
-            formData.append('catagory', data.catagory);
+
+            // Ensure category is sent as ID, not object (consistency with update)
+            const catId = typeof data.catagory === 'object' && data.catagory !== null
+                ? data.catagory._id
+                : data.catagory;
+            formData.append('catagory', catId);
+
             formData.append('discount', data.discount || 0);
             formData.append('countInStock', data.countInStock || 0);
             formData.append('brand', data.brand || '');
@@ -47,7 +55,9 @@ const AdminCreateProduct = () => {
             }
 
             const config = {
-                headers: { 'Content-Type': 'multipart/form-data' }
+                headers: { 'Content-Type': 'multipart/form-data',
+                    Authorization : `Bearer ${token}`
+                 }
             };
 
             return await api.post('/product', formData, config);

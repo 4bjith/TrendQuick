@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../api/axiosClient";
 import useCartStore from "../zustand/Cart";
 import { toast } from "react-toastify";
+import { BASE_URL } from "../api/url";
 
 export default function SingleProduct() {
   const [searchParams] = useSearchParams();
@@ -55,7 +56,7 @@ export default function SingleProduct() {
         <div className="w-full lg:w-1/3 flex justify-center">
           <div className="w-full max-w-md h-[380px] bg-white shadow-lg rounded-xl overflow-hidden border border-green-light">
             <img
-              src={product.image}
+              src={product.image.startsWith('http') ? product.image : `${BASE_URL}/${product.image}`}
               alt={product.title}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             />

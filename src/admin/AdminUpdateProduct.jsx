@@ -5,12 +5,14 @@ import api from '../api/axiosClient';
 import { toast } from 'react-toastify';
 import { FaArrowLeft, FaSave, FaUpload } from 'react-icons/fa';
 import useUserStore from '../zustand/userStore';
+import { BASE_URL } from '../api/url'
 
 const AdminUpdateProduct = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const token = useUserStore(state => state.token)
+
 
     const [formData, setFormData] = useState({
         title: '',
@@ -25,7 +27,7 @@ const AdminUpdateProduct = () => {
     const [previewImage, setPreviewImage] = useState(null);
 
     // Fetch Categories
-    const { data: categories  } = useQuery({
+    const { data: categories } = useQuery({
         queryKey: ['categories'],
         queryFn: async () => {
             const res = await api.get('/catagory');
@@ -33,15 +35,15 @@ const AdminUpdateProduct = () => {
         }
     });
 
-    
+
 
     // Fetch Product Data
-   const {data: prod}= useQuery({
+    const { data: prod } = useQuery({
         queryKey: ['product', id],
         queryFn: async () => {
-            const res = await api.get(`/product/${id}`,{
+            const res = await api.get(`/product/${id}`, {
                 headers: {
-                    Authorization : `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                 }
             });
             return res.data;
@@ -69,14 +71,17 @@ const AdminUpdateProduct = () => {
         }
     });
 
-    useEffect(()=>{
-        if(prod){
-            setFormData(prod)
-            if (prod.image){
-                setPreviewImage(prod.image.startsWith('http') ? prod.image : `http://localhost:3000/${prod.image}`);
+    useEffect(() => {
+        if (prod) {
+            setFormData({
+                ...prod,
+                catagory: prod.catagory?._id || prod.catagory || ''
+            })
+            if (prod?.image) {
+                setPreviewImage(prod.image?.startsWith('http') ? prod.image : `${BASE_URL}/${prod.image}`);
             }
         }
-    },[prod])
+    }, [prod])
 
     const mutation = useMutation({
         mutationFn: async (data) => {
@@ -84,11 +89,15 @@ const AdminUpdateProduct = () => {
 
             formData.append('title', data.title);
             formData.append('price', data.price);
-            formData.append('description', data.description || '');
-            formData.append('catagory', data.catagory);
+            formData.append('description', data.description);
+            // Ensure category is sent as ID, not object
+            const catId = typeof data.catagory === 'object' && data.catagory !== null
+                ? data.catagory._id
+                : data.catagory;
+            formData.append('catagory', catId);
             formData.append('discount', data.discount || 0);
             formData.append('countInStock', data.countInStock || 0);
-            formData.append('brand', data.brand || '');
+            formData.append('brand', data.brand);
 
             if (data.image instanceof File) {
                 formData.append('image', data.image);
@@ -99,7 +108,11 @@ const AdminUpdateProduct = () => {
             }
 
             const config = {
-                headers: { 'Content-Type': 'multipart/form-data' }
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+
             };
 
             return await api.put(`/product/${id}`, formData, config);
@@ -135,7 +148,7 @@ const AdminUpdateProduct = () => {
 
     if (!id) return null;
 
-    
+
 
     return (
         <div className="max-w-4xl mx-auto pb-10">
@@ -161,7 +174,7 @@ const AdminUpdateProduct = () => {
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                required
+
                                 className="w-full p-3 border border-green-light rounded-lg focus:ring-2 focus:ring-green-medium outline-none"
                                 placeholder="Enter product title"
                             />
@@ -175,7 +188,7 @@ const AdminUpdateProduct = () => {
                                 name="price"
                                 value={formData.price}
                                 onChange={handleChange}
-                                required
+
                                 className="w-full p-3 border border-green-light rounded-lg focus:ring-2 focus:ring-green-medium outline-none"
                                 placeholder="0.00"
                             />
@@ -220,9 +233,9 @@ const AdminUpdateProduct = () => {
                                 name="countInStock"
                                 value={formData.countInStock}
                                 onChange={handleChange}
-                                required
+                                placeholder={formData.countInStock}
                                 className="w-full p-3 border border-green-light rounded-lg focus:ring-2 focus:ring-green-medium outline-none"
-                                placeholder="0"
+
                             />
                         </div>
 
@@ -235,7 +248,7 @@ const AdminUpdateProduct = () => {
                                 value={formData.brand}
                                 onChange={handleChange}
                                 className="w-full p-3 border border-green-light rounded-lg focus:ring-2 focus:ring-green-medium outline-none"
-                                placeholder="Brand Name"
+                                placeholder={formData.brand}
                             />
                         </div>
 
@@ -248,7 +261,7 @@ const AdminUpdateProduct = () => {
                                 onChange={handleChange}
                                 rows="4"
                                 className="w-full p-3 border border-green-light rounded-lg focus:ring-2 focus:ring-green-medium outline-none"
-                                placeholder="Product description..."
+                                placeholder={formData.description}
                             ></textarea>
                         </div>
 
@@ -258,7 +271,8 @@ const AdminUpdateProduct = () => {
                             <div className="flex items-center gap-6">
                                 <div className="w-32 h-32 bg-gray-100 border-2 border-dashed border-green-medium rounded-lg flex items-center justify-center overflow-hidden relative">
                                     {previewImage ? (
-                                        <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                                        <img src={previewImage}
+                                            alt="Preview" className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="text-gray-400 text-sm">No Image</span>
                                     )}

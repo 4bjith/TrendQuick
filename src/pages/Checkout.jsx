@@ -58,7 +58,7 @@ export default function Checkout() {
             <Navbar />
 
             {/* ---------- Main Content ---------- */}
-            <main className="flex-grow container mx-auto px-4 py-12">
+            <main className="grow container mx-auto px-4 py-12">
                 <h1 className="text-4xl font-extrabold text-center text-green-dark mb-10 drop-shadow-md">
                     Checkout
                 </h1>

@@ -64,14 +64,14 @@ export default function ProductRibbon() {
         {items.slice(0, 4).map((item) => (
           <div
             key={item._id}
-            className=" h-[380px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden border border-green-light/50"
+            className=" h-[380px] bg-[#f4f0e1]  rounded-xl shadow hover:shadow-lg transition overflow-hidden border border-green-light/50"
           >
             {/* Product Image */}
-            <div className="relative">
+            <div className="relative bg-white m-2">
               <img
                 src={item.image.startsWith('http')?item.image : `${BASE_URL}/${item.image}` || "https://via.placeholder.com/400"}
                 alt={item.title}
-                className="w-full h-[180px] sm:h-[200px] object-cover"
+                className="w-full h-[170px] sm:h-[180px] object-cover"
               />
 
               {item.discount && (

@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../api/url";
 
 
 export default function ProductCard(props) {
   const navigate = useNavigate()
   return (
-    <div onClick={() => navigate(`/item?id=${props.id}`)} className="relative w-[200px] md:w-[200px] h-[300px] bg-white rounded-xl p-3 shrink-0 shadow-sm cursor-pointer border border-green-light hover:shadow-md transition-all">
+    <div onClick={() => navigate(`/item?id=${props.id}`)} className="relative w-[200px] md:w-[200px] h-[300px] bg-[#ffffffe8] rounded-xl p-3 shrink-0 shadow-sm cursor-pointer border border-green-light hover:shadow-md transition-all">
       {/* ❤️ Wishlist Icon */}
       <button className="absolute top-2 right-2 bg-white/80 rounded-full shadow p-1 hover:scale-110 transition">
         <svg
@@ -25,7 +26,7 @@ export default function ProductCard(props) {
 
       {/* Image */}
       <img
-        src={props.image || "https://via.placeholder.com/200"}
+        src={props.image.startsWith('http')?props.image : `${BASE_URL}/${props.image}` || "https://via.placeholder.com/200"}
         alt={props.title}
         className="w-full h-[150px] object-cover rounded-lg bg-gray-100"
       />

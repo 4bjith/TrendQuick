@@ -17,6 +17,7 @@ import AdminUpdateProduct from "./admin/AdminUpdateProduct";
 import AdminCategories from "./admin/AdminCategories";
 import AdminOrders from "./admin/AdminOrders";
 import AdminAnalytics from "./admin/AdminAnalytics";
+import Search from "./pages/Search";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function Router() {
         <Route path="/item" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/search" element={<Search />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>

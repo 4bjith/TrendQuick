@@ -5,11 +5,21 @@ import ProductCard from "../components/ProductCard";
 import api from "../api/axiosClient";
 import { useEffect, useState } from "react";
 import { FiGrid, FiList } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
+
 
 export default function AllProducts() {
   const [page, setPage] = useState(1);
   const [cate, setCate] = useState([]);
   const [select, setSelect] = useState("");
+  const location = useLocation();
+const categoryName = new URLSearchParams(location.search).get("category");
+  
+useEffect(() => {
+  if (categoryName) {
+    setSelect(categoryName);
+  }
+}, [categoryName]);
 
   // Fetch products
   const {
@@ -19,7 +29,7 @@ export default function AllProducts() {
   } = useQuery({
     queryKey: ["products", page],
     queryFn: async () => {
-      const res = await api.get(`/product?page=${page}&limit=12`);
+      const res = await api.get(`/product?page=${page}&limit=8`);
       return res.data;
     },
     keepPreviousData: true,

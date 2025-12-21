@@ -4,6 +4,7 @@ import { FiTrash2, FiMinus, FiPlus, FiArrowLeft } from "react-icons/fi";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import useCartStore from "../zustand/Cart";
+import { BASE_URL } from "../api/url";
 
 const Cart = () => {
     const { items, increaseQty, decreaseQty, removeItem, getTotal } = useCartStore();
@@ -45,7 +46,7 @@ const Cart = () => {
                                     <div className="w-full sm:w-24 h-24 shrink-0 bg-gray-100 rounded-lg overflow-hidden">
                                         {item.image ? (
                                             <img
-                                                src={item.image}
+                                                src={item.image.startsWith('http') ? item.image : `${BASE_URL}/${item.image}`}
                                                 alt={item.title}
                                                 className="w-full h-full object-cover"
                                             />

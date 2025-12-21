@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { BASE_URL } from "../api/url";
+import { useNavigate } from "react-router-dom";
 
 export default function CategoryRibbon() {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -54,7 +56,7 @@ export default function CategoryRibbon() {
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
 
             {/* Bottom Text + Icon */}
-            <div className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
+            <div onClick={()=>{navigate(`/products?category=${item.catagoryName}`)}} className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
               <span>{item.catagoryName}</span>
               <IoMdArrowRoundForward className="text-2xl group-hover:translate-x-1 transition-transform" />
             </div>

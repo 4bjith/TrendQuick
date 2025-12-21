@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axiosClient';
 import { FaEdit, FaTrash, FaPlus, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import {BASE_URL} from '../api/url'
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
@@ -50,7 +51,7 @@ const AdminProducts = () => {
     // Helper to get image URL (consistent with AdminCategories)
     const getImageUrl = (path) => {
         if (!path) return 'https://via.placeholder.com/48';
-        return path.startsWith('http') ? path : `http://localhost:3000/${path}`;
+        return path.startsWith('http') ? path : `${BASE_URL}/${path}`;
     };
 
     if (isLoading) return <div className="text-center py-10">Loading products...</div>;
