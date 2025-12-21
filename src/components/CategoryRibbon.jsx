@@ -10,7 +10,7 @@ export default function CategoryRibbon() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:8000/catagory");
+        const res = await fetch(`${BASE_URL}/catagory`);
         const data = await res.json();
 
         if (Array.isArray(data)) setCategories(data);
