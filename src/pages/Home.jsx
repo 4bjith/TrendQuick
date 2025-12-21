@@ -6,6 +6,7 @@ import img3 from "../assets/images/giorgio-trovato-8krX0HkXw8c-unsplash.jpg";
 import CategoryRibbon from "../components/CategoryRibbon";
 import ProductRibbon from "../components/ProductRibbon";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const slides = [
   {
@@ -29,6 +30,7 @@ const slides = [
 ];
 
 function Home() {
+  const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ function Home() {
               <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
                 {slides[currentSlide].description}
               </p>
-              <button className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
+              <button onClick={()=>{navigate("/products")}} className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
                 Shop Now
               </button>
             </div>

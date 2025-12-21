@@ -12,14 +12,15 @@ export default function AllProducts() {
   const [page, setPage] = useState(1);
   const [cate, setCate] = useState([]);
   const [select, setSelect] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
   const location = useLocation();
-const categoryName = new URLSearchParams(location.search).get("category");
-  
-useEffect(() => {
-  if (categoryName) {
-    setSelect(categoryName);
-  }
-}, [categoryName]);
+  const categoryName = new URLSearchParams(location.search).get("category");
+
+  useEffect(() => {
+    if (categoryName) {
+      setSelect(categoryName);
+    }
+  }, [categoryName]);
 
   // Fetch products
   const {
@@ -150,10 +151,14 @@ useEffect(() => {
             </p>
 
             <div className="flex items-center gap-4">
-              <select className="border border-green-light rounded-lg px-3 py-2 text-sm text-green-dark bg-white focus:outline-none focus:ring-1 focus:ring-green-medium">
-                <option>Sort By</option>
-                <option>Price: Low → High</option>
-                <option>Price: High → Low</option>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="border border-green-light rounded-lg px-3 py-2 text-sm text-green-dark bg-white focus:outline-none focus:ring-1 focus:ring-green-medium"
+              >
+                <option value="">Sort By</option>
+                <option value="asc">Price: Low → High</option>
+                <option value="desc">Price: High → Low</option>
               </select>
 
               <button className="p-2 border border-green-light rounded-lg text-green-dark hover:bg-green-light/20 transition">
@@ -181,6 +186,11 @@ useEffect(() => {
               ?.filter((f) =>
                 select === "" ? true : f.catagory?.catagoryName === select
               )
+              .sort((a, b) => {
+                if (sortOrder === "asc") return a.price - b.price;
+                if (sortOrder === "desc") return b.price - a.price;
+                return 0;
+              })
               .map((item) => (
                 <ProductCard
                   key={item._id}
@@ -200,8 +210,8 @@ useEffect(() => {
               onClick={prevPage}
               disabled={page === 1}
               className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${page === 1
-                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "text-green-dark border-green-dark hover:bg-green-light/20"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                : "text-green-dark border-green-dark hover:bg-green-light/20"
                 }`}
             >
               ← Previous
@@ -215,8 +225,8 @@ useEffect(() => {
               onClick={nextPage}
               disabled={page === totalPages}
               className={`px-4 py-2 rounded-lg border text-sm font-semibold transition ${page === totalPages
-                  ? "text-gray-400 border-gray-200 cursor-not-allowed"
-                  : "text-green-dark border-green-dark hover:bg-green-light/20"
+                ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                : "text-green-dark border-green-dark hover:bg-green-light/20"
                 }`}
             >
               Next →

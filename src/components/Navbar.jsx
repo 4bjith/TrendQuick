@@ -79,12 +79,12 @@ export default function Navbar(prop) {
         <Link to={"/login"} className="hover:text-black transition-colors">
           Sign in
         </Link>
-        <div className="flex items-center gap-2  px-4 py-2 rounded-full cursor-pointer text-cream bg-green-medium hover:bg-green-dark transition-colors shadow-md">
+        <Link to="/account" className="flex items-center gap-2  px-4 py-2 rounded-full cursor-pointer text-cream bg-green-medium hover:bg-green-dark transition-colors shadow-md">
           <TiUser className="text-lg text-black" />
           <span className="text-sm font-semibold text-cream">
             {user?.name || "user_name"}
           </span>
-        </div>
+        </Link>
       </div>
 
       {/* Mobile Menu Button */}
@@ -150,12 +150,12 @@ export default function Navbar(prop) {
           >
             Sign in
           </Link>
-          <div className="flex items-center gap-2 px-6 py-2 rounded-full cursor-pointer hover:bg-green-medium transition-colors shadow-md bg-green-light">
+          <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 px-6 py-2 rounded-full cursor-pointer hover:bg-green-medium transition-colors shadow-md bg-green-light">
             <TiUser className="text-lg text-black " />
             <span className="text-sm font-semibold text-black">
               {user ? user.name : "user_name"}
             </span>
-          </div>
+          </Link>
         </div>
       )}
     </nav>

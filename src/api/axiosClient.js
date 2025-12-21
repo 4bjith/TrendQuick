@@ -7,4 +7,16 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  const userStore = localStorage.getItem('user-store');
+  if (userStore) {
+    const { state } = JSON.parse(userStore);
+    if (state?.token) {
+      config.headers.Authorization = `Bearer ${state.token}`;
+    }
+  }
+  return config;
+});
+
+
 export default api;

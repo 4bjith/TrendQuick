@@ -8,6 +8,8 @@ import SingleProduct from "./pages/SingleProduct";
 import Cart from "./pages/Cart";
 import AllProducts from "./pages/AllProducts";
 import Checkout from "./pages/Checkout";
+import AccountManager from "./pages/AccountManager";
+import WishList from "./pages/WishList";
 
 // Admin Imports
 import AdminDashboard from "./admin/AdminDashboard";
@@ -18,6 +20,7 @@ import AdminCategories from "./admin/AdminCategories";
 import AdminOrders from "./admin/AdminOrders";
 import AdminAnalytics from "./admin/AdminAnalytics";
 import Search from "./pages/Search";
+import WhishList from "./pages/WhishList";
 
 function Router() {
   return (
@@ -26,12 +29,14 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/products" element={<Products />} /> */}
+        <Route path="/wishlist" element={<WhishList />} />
         <Route path="/products" element={<AllProducts />} />
         <Route path="/item" element={<SingleProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/account" element={<AccountManager />} />
+
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />}>

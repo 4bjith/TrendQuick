@@ -1,20 +1,50 @@
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../api/url";
+import useWishlistStore from "../zustand/wishlistStore";
+import { toast } from "react-toastify";
 
 
 export default function ProductCard(props) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
+
+  // Construct a product object from props (or assume props is the product, but props are flattened here)
+  const productObj = {
+    _id: props.id,
+    title: props.title,
+    price: props.price,
+    image: props.image,
+    catagory: props.catagory
+    // Add other needed fields
+  };
+
+  const isIn = isInWishlist(props.id);
+
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
+    if (isIn) {
+      removeFromWishlist(props.id);
+      toast.info("Removed from Wishlist");
+    } else {
+      addToWishlist(productObj);
+      toast.success("Added to Wishlist");
+    }
+  };
+
   return (
-    <div onClick={() => navigate(`/item?id=${props.id}`)} className="relative w-[200px] md:w-[200px] h-[300px] bg-[#ffffffe8] rounded-xl p-3 shrink-0 shadow-sm cursor-pointer border border-green-light hover:shadow-md transition-all">
+    <div onClick={() => navigate(`/item?id=${props.id}`)} className="relative w-[200px] md:w-[200px] h-[310px] bg-[#ffffffe8] rounded-xl p-3 shrink-0 shadow-sm cursor-pointer border border-green-light hover:shadow-md transition-all">
       {/* ❤️ Wishlist Icon */}
-      <button className="absolute top-2 right-2 bg-white/80 rounded-full shadow p-1 hover:scale-110 transition">
+      <button
+        onClick={handleWishlistClick}
+        className="absolute top-2 right-2 bg-white/80 rounded-full shadow p-1 hover:scale-110 transition z-10"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          fill="none"
+          fill={isIn ? "currentColor" : "none"}
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="w-5 h-5 text-green-medium hover:text-green-dark hover:fill-green-medium"
+          className={`w-5 h-5 ${isIn ? "text-red-500" : "text-green-medium hover:text-green-dark hover:fill-green-medium"}`}
         >
           <path
             strokeLinecap="round"
@@ -26,7 +56,7 @@ export default function ProductCard(props) {
 
       {/* Image */}
       <img
-        src={props.image.startsWith('http')?props.image : `${BASE_URL}/${props.image}` || "https://via.placeholder.com/200"}
+        src={props.image.startsWith('http') ? props.image : `${BASE_URL}/${props.image}` || "https://via.placeholder.com/200"}
         alt={props.title}
         className="w-full h-[150px] object-cover rounded-lg bg-gray-100"
       />
