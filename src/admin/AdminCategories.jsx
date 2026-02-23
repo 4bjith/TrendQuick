@@ -145,30 +145,37 @@ const AdminCategories = () => {
     if (isError) return <div className="p-10 text-center text-red-500">Error loading categories.</div>;
 
     return (
-        <div className="max-w-4xl mx-auto space-y-8">
-            <h2 className="text-3xl font-bold text-green-dark">Category Management</h2>
+        <div className="max-w-6xl mx-auto space-y-12 pb-20">
+            <header>
+                <h2 className="text-4xl font-black text-green-dark tracking-tight mb-2">Category Architecture</h2>
+                <p className="text-green-dark/40 font-bold text-sm tracking-widest uppercase ml-1">Defining the Marketplace Structure</p>
+            </header>
 
-            {/* Create Form */}
-            <div className="bg-white p-6 rounded-xl shadow-md border border-green-light">
-                <h3 className="text-lg font-semibold text-green-dark mb-4">Add New Category</h3>
-                <form onSubmit={handleCreate} className="flex flex-col gap-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                        {/* Name Input */}
-                        <div className="w-full">
-                            <input
-                                type="text"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
-                                placeholder="Category Name"
-                                className="w-full p-3 border border-green-light rounded-lg focus:outline-none focus:ring-2 focus:ring-green-medium"
-                            />
-                        </div>
+            {/* Create Card */}
+            <div className="bg-white/60 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-2xl border border-white/40">
+                <div className="flex items-center gap-4 mb-8">
+                    <div className="h-8 w-2 bg-green-medium rounded-full"></div>
+                    <h3 className="text-xl font-black text-green-dark uppercase tracking-wider">Initialize New Segment</h3>
+                </div>
 
-                        {/* Image Upload */}
+                <form onSubmit={handleCreate} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-end">
+                    <div className="space-y-2 lg:col-span-1">
+                        <label className="text-[0.65rem] font-bold text-green-dark/60 uppercase tracking-widest ml-1">Category Designation</label>
+                        <input
+                            type="text"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            placeholder="e.g. Organic Essentials"
+                            className="w-full px-6 py-4 bg-white/80 border border-green-light/30 rounded-2xl focus:ring-4 focus:ring-green-medium/10 focus:border-green-medium outline-none transition-all text-green-dark font-medium placeholder:text-green-dark/20"
+                        />
+                    </div>
+
+                    <div className="lg:col-span-1">
+                        <label className="text-[0.65rem] font-bold text-green-dark/60 uppercase tracking-widest ml-1 block mb-2">Visual Asset</label>
                         <div className="flex items-center gap-4">
-                            <label className="flex-1 cursor-pointer bg-white border border-green-light text-green-dark px-4 py-3 rounded-lg hover:bg-green-light/20 transition-colors flex items-center justify-center gap-2 text-sm max-h-[46px]">
+                            <label className="flex-1 cursor-pointer bg-green-dark text-cream px-6 py-4 rounded-2xl hover:bg-green-medium transition-all flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest shadow-lg">
                                 <FaUpload />
-                                <span>{newImage ? newImage.name : "Choose Image"}</span>
+                                <span>{newImage ? newImage.name : "Select Media"}</span>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -177,7 +184,7 @@ const AdminCategories = () => {
                                 />
                             </label>
                             {newPreview && (
-                                <div className="w-12 h-12 rounded border border-green-light overflow-hidden shrink-0">
+                                <div className="w-14 h-14 rounded-2xl border-4 border-white shadow-xl overflow-hidden shrink-0 animate-bounce-subtle">
                                     <img src={newPreview} alt="Preview" className="w-full h-full object-cover" />
                                 </div>
                             )}
@@ -186,126 +193,100 @@ const AdminCategories = () => {
 
                     <button
                         type="submit"
-                        disabled={createMutation.isLoading || !newName.trim()}
-                        className="bg-green-dark text-cream px-6 py-3 rounded-lg hover:bg-green-medium transition-colors disabled:opacity-50 flex items-center gap-2 h-fit w-fit"
+                        disabled={createMutation.isPending || !newName.trim()}
+                        className="lg:col-span-1 w-full bg-green-medium text-white px-8 py-4 rounded-2xl hover:bg-green-dark transition-all disabled:opacity-30 flex items-center justify-center gap-3 font-black uppercase tracking-widest shadow-xl shadow-green-medium/20 active:scale-95 h-[58px]"
                     >
-                        <FaPlus /> Add Category
+                        {createMutation.isPending ? 'Processing...' : <><FaPlus /> Build Segment</>}
                     </button>
                 </form>
             </div>
 
-            {/* Category List */}
-            <div className="bg-white rounded-xl shadow-lg border border-green-light overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-green-light/30 text-green-dark uppercase text-sm">
-                        <tr>
-                            <th className="p-4 border-b border-green-light w-24">Image</th>
-                            <th className="p-4 border-b border-green-light">Category Name</th>
-                            <th className="p-4 border-b border-green-light w-48 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {categories.map((cat) => (
-                            <tr key={cat._id} className="hover:bg-green-light/10 transition-colors border-b border-green-light last:border-0">
-                                {/* Image Column */}
-                                <td className="p-4 align-top">
-                                    {editingId === cat._id ? (
-                                        <div className="space-y-2">
-                                            <div className="w-16 h-16 rounded border border-green-medium overflow-hidden bg-white relative group">
-                                                <img
-                                                    src={editPreview || getImageUrl(existingImage)}
-                                                    alt="Edit Preview"
-                                                    className="w-full h-full object-cover"
-                                                />
-                                                <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white cursor-pointer transition-opacity">
-                                                    <FaUpload size={20} />
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        onChange={(e) => handleFileChange(e, true)}
-                                                        className="hidden"
-                                                    />
-                                                </label>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="w-16 h-16 rounded border border-green-light overflow-hidden bg-white">
-                                            <img
-                                                src={getImageUrl(cat.catagoryImage)}
-                                                alt={cat.catagoryName}
-                                                className="w-full h-full object-cover"
-                                                onError={(e) => e.target.src = 'https://via.placeholder.com/48?text=Error'}
-                                            />
-                                        </div>
-                                    )}
-                                </td>
-
-                                {/* Name Column */}
-                                <td className="p-4 align-middle">
-                                    {editingId === cat._id ? (
-                                        <input
-                                            type="text"
-                                            value={editName}
-                                            onChange={(e) => setEditName(e.target.value)}
-                                            className="w-full p-2 border border-green-medium rounded focus:outline-none focus:ring-1 focus:ring-green-medium"
-                                            autoFocus
+            {/* Grid of Categories */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {categories.map((cat) => (
+                    <div key={cat._id} className="group relative bg-white/40 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-xl border border-white/40 hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                        {editingId === cat._id ? (
+                            <div className="space-y-6">
+                                <div className="relative group/edit">
+                                    <div className="w-full h-48 rounded-3xl overflow-hidden shadow-inner bg-green-dark/5">
+                                        <img
+                                            src={editPreview || getImageUrl(existingImage)}
+                                            alt="Edit Preview"
+                                            className="w-full h-full object-cover"
                                         />
-                                    ) : (
-                                        <span className="text-gray-800 font-medium text-lg">{cat.catagoryName}</span>
-                                    )}
-                                </td>
-
-                                {/* Actions Column */}
-                                <td className="p-4 align-middle">
-                                    <div className="flex justify-center gap-3">
-                                        {editingId === cat._id ? (
-                                            <>
-                                                <button
-                                                    onClick={() => handleUpdate(cat._id)}
-                                                    className="p-2 text-green-600 hover:bg-green-50 rounded bg-green-50"
-                                                    title="Save"
-                                                >
-                                                    <FaSave size={18} />
-                                                </button>
-                                                <button
-                                                    onClick={handleCancelEdit}
-                                                    className="p-2 text-gray-500 hover:bg-gray-100 rounded bg-gray-50"
-                                                    title="Cancel"
-                                                >
-                                                    <FaTimes size={18} />
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button
-                                                    onClick={() => handleEditStart(cat)}
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded hover:shadow"
-                                                    title="Edit"
-                                                >
-                                                    <FaEdit size={18} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(cat._id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded hover:shadow"
-                                                    title="Delete"
-                                                >
-                                                    <FaTrash size={18} />
-                                                </button>
-                                            </>
-                                        )}
                                     </div>
-                                </td>
-                            </tr>
-                        ))}
-                        {categories.length === 0 && (
-                            <tr>
-                                <td colSpan="3" className="p-6 text-center text-gray-500">
-                                    No categories found. Add one above!
-                                </td>
-                            </tr>
+                                    <label className="absolute inset-0 bg-green-dark/60 backdrop-blur-sm opacity-0 group-hover/edit:opacity-100 flex flex-col items-center justify-center text-white cursor-pointer transition-all duration-300 rounded-3xl">
+                                        <FaUpload size={24} className="mb-2" />
+                                        <span className="text-[0.6rem] font-black uppercase tracking-widest">Swap Media</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => handleFileChange(e, true)}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </div>
+                                <input
+                                    type="text"
+                                    value={editName}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                    className="w-full px-6 py-4 bg-white/80 border border-green-medium rounded-2xl focus:ring-4 focus:ring-green-medium/10 outline-none transition-all text-green-dark font-black text-center"
+                                    autoFocus
+                                />
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => handleUpdate(cat._id)}
+                                        className="flex-1 py-4 bg-green-medium text-white rounded-2xl font-black uppercase tracking-widest hover:bg-green-dark transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
+                                    >
+                                        <FaSave /> Commit
+                                    </button>
+                                    <button
+                                        onClick={handleCancelEdit}
+                                        className="px-6 py-4 bg-red-500/10 text-red-500 rounded-2xl font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all active:scale-95"
+                                    >
+                                        <FaTimes />
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="w-full h-48 rounded-3xl overflow-hidden mb-6 shadow-lg group-hover:scale-[1.02] transition-transform duration-700">
+                                    <img
+                                        src={getImageUrl(cat.catagoryImage)}
+                                        alt={cat.catagoryName}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div className="text-center group-hover:-translate-y-1 transition-transform duration-500">
+                                    <h4 className="text-2xl font-black text-green-dark tracking-tight mb-6">{cat.catagoryName}</h4>
+                                    <div className="flex justify-center gap-3">
+                                        <button
+                                            onClick={() => handleEditStart(cat)}
+                                            className="w-12 h-12 flex items-center justify-center bg-green-dark text-cream rounded-2xl hover:bg-green-medium transition-all duration-300 shadow-lg hover:-translate-y-1"
+                                            title="Modify Component"
+                                        >
+                                            <FaEdit />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(cat._id)}
+                                            className="w-12 h-12 flex items-center justify-center bg-red-500/10 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all duration-300 shadow-md hover:-translate-y-1"
+                                            title="Dissolve Component"
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
                         )}
-                    </tbody>
-                </table>
+                    </div>
+                ))}
+
+                {categories.length === 0 && (
+                    <div className="col-span-full py-20 bg-white/20 backdrop-blur-md rounded-[2.5rem] border-2 border-dashed border-green-light flex flex-col items-center gap-4 text-green-dark/20 italic">
+                        <FaImage size={60} />
+                        <p className="font-black uppercase tracking-[0.2em] text-lg">Foundation Empty</p>
+                    </div>
+                )}
             </div>
         </div>
     );

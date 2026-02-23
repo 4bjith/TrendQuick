@@ -10,6 +10,8 @@ import AllProducts from "./pages/AllProducts";
 import Checkout from "./pages/Checkout";
 import AccountManager from "./pages/AccountManager";
 import WishList from "./pages/WishList";
+import Orders from "./pages/Orders";
+import Thanks from "./pages/Thanks";
 
 // Admin Imports
 import AdminDashboard from "./admin/AdminDashboard";
@@ -36,6 +38,9 @@ function Router() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/search" element={<Search />} />
         <Route path="/account" element={<AccountManager />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/thanks" element={<Thanks />} />
+
 
 
         {/* Admin Routes */}

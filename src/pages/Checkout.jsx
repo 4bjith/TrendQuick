@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useMutation } from "@tanstack/react-query";
+import api from "../api/axiosClient";
+import useCartStore from "../zustand/Cart";
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
-/**
- * Checkout page – includes shipping address and payment sections.
- * Designed with a premium glass‑morphism style and Tailwind CSS utilities.
- */
 export default function Checkout() {
     const navigate = useNavigate();
+    const { items, clearCart } = useCartStore();
+    const { user } = useAuth();
 
     // ----- Shipping address state -----
     const [shipping, setShipping] = useState({
         fullName: "",
+        phone: "",
         address1: "",
         address2: "",
         city: "",
         state: "",
         zip: "",
         country: "",
-        phone: "",
     });
 
     // ----- Payment state -----
@@ -28,6 +31,21 @@ export default function Checkout() {
         expiry: "",
         cvv: "",
         nameOnCard: "",
+    });
+
+    const orderMutation = useMutation({
+        mutationFn: async (orderData) => {
+            const res = await api.post("/orders", orderData);
+            return res.data;
+        },
+        onSuccess: (data) => {
+            toast.success("Order placed successfully! 🎉");
+            clearCart();
+            navigate("/thanks", { state: { order: data } });
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.error || "Failed to place order. Please try again.");
+        }
     });
 
     // ----- Handlers -----
@@ -43,11 +61,34 @@ export default function Checkout() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Placeholder – in a real app you’d send data to the backend.
-        console.log("Shipping:", shipping);
-        console.log("Payment:", payment);
-        alert("Order placed! 🎉");
-        navigate("/"); // redirect to home after checkout
+
+        if (items.length === 0) {
+            toast.error("Your cart is empty!");
+            return;
+        }
+
+        if (!user) {
+            toast.warn("Please log in to place an order.");
+            return;
+        }
+
+        const [fname, ...lnameArr] = shipping.fullName.split(" ");
+        const lname = lnameArr.join(" ") || ".";
+
+        const orderData = {
+            userId: user.id || user._id,
+            email: user.email,
+            phone: shipping.phone,
+            address: `${shipping.address1}, ${shipping.address2 ? shipping.address2 + ", " : ""}${shipping.city}, ${shipping.state}, ${shipping.zip}, ${shipping.country}`,
+            fname: fname,
+            lname: lname,
+            orderedItems: items.map(item => ({
+                pid: item._id,
+                qty: item.quantity
+            }))
+        };
+
+        orderMutation.mutate(orderData);
     };
 
     const inputClasses = "w-full px-4 py-3 bg-white/70 backdrop-blur-sm rounded-lg border border-green-light focus:outline-none focus:ring-2 focus:ring-green-medium transition text-green-dark placeholder-green-dark/50";

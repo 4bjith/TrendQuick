@@ -45,8 +45,8 @@ export default function CategoryRibbon() {
             {/* Background Image */}
             <img
               src={
-                item.catagoryImage?.startsWith('http')?item.catagoryImage : `${BASE_URL}/${item.catagoryImage}` ||
-                "https://via.placeholder.com/300x300?text=No+Image"
+                item.catagoryImage?.startsWith('http') ? item.catagoryImage : `${BASE_URL}/${item.catagoryImage}` ||
+                  "https://via.placeholder.com/300x300?text=No+Image"
               }
               alt={item.catagoryName}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -56,7 +56,7 @@ export default function CategoryRibbon() {
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
 
             {/* Bottom Text + Icon */}
-            <div onClick={()=>{navigate(`/products?category=${item.catagoryName}`)}} className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
+            <div onClick={() => { navigate(`/products?category=${item.catagoryName}`) }} className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
               <span>{item.catagoryName}</span>
               <IoMdArrowRoundForward className="text-2xl group-hover:translate-x-1 transition-transform" />
             </div>
