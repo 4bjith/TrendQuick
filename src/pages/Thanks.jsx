@@ -3,13 +3,51 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { BASE_URL } from "../api/url";
+import api from "../api/axiosClient";
+
 
 export default function Thanks() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { order } = location.state || {};
+    const [order, setOrder] = React.useState(location.state?.order || null);
+    const [loading, setLoading] = React.useState(!location.state?.order);
+
+    const query = new URLSearchParams(location.search);
+    const orderId = query.get("order_id");
+
+    React.useEffect(() => {
+        if (!order && orderId) {
+            const fetchOrder = async () => {
+                try {
+                    const res = await api.get(`/orders/my`); // Assuming developer knows how to get one order, or search in all
+                    // For better implementation, one should have /orders/:id
+                    // but let's try to find it in my orders for now if specific endpoint isn't clear
+                    const yourOrder = res.data.find(o => o._id === orderId);
+                    if (yourOrder) {
+                        setOrder(yourOrder);
+                    }
+                } catch (err) {
+                    console.error("Error fetching order:", err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchOrder();
+        } else {
+            setLoading(false);
+        }
+    }, [order, orderId]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-cream">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-dark"></div>
+            </div>
+        );
+    }
 
     if (!order) {
+
         return (
             <div className="min-h-screen flex flex-col bg-cream">
                 <Navbar />
