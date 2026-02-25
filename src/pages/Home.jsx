@@ -77,7 +77,7 @@ function Home() {
               <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
                 {slides[currentSlide].description}
               </p>
-              <button onClick={()=>{navigate("/products")}} className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
+              <button onClick={() => { navigate("/products") }} className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
                 Shop Now
               </button>
             </div>

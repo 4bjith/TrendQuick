@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../api/axiosClient';
 import { FaEdit, FaTrash, FaPlus, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import {BASE_URL} from '../api/url'
+import { BASE_URL } from '../api/url'
 
 const AdminProducts = () => {
     const [page, setPage] = useState(1);
@@ -12,13 +12,23 @@ const AdminProducts = () => {
     const queryClient = useQueryClient();
 
     const { data: productsData, isLoading, isError } = useQuery({
-        queryKey: ['admin-products', page],
+        queryKey: ['admin-products', page, searchTerm],
         queryFn: async () => {
-            const res = await api.get(`/product?page=${page}&limit=10`);
+            const res = await api.get(`/product?page=${page}&limit=10&search=${searchTerm}`);
             return res.data;
         },
         keepPreviousData: true,
     });
+
+    // Handle search with debounce effectively
+    const [displaySearch, setDisplaySearch] = useState(searchTerm);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setSearchTerm(displaySearch);
+            setPage(1);
+        }, 500);
+        return () => clearTimeout(handler);
+    }, [displaySearch]);
 
     const deleteMutation = useMutation({
         mutationFn: async (id) => {
@@ -42,126 +52,139 @@ const AdminProducts = () => {
     const products = productsData?.data || [];
     const totalPages = productsData?.totalPages || 1;
 
-    // Filter by search term (client-side for now as API might not support it yet)
-    const filteredProducts = products.filter(p =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-
     // Helper to get image URL (consistent with AdminCategories)
     const getImageUrl = (path) => {
-        if (!path) return 'https://via.placeholder.com/48';
+        if (!path) return 'https://via.placeholder.com/80';
         return path.startsWith('http') ? path : `${BASE_URL}/${path}`;
     };
 
-    if (isLoading) return <div className="text-center py-10">Loading products...</div>;
-    if (isError) return <div className="text-center py-10 text-red-500">Error loading products</div>;
+    if (isLoading) return <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-medium"></div>
+    </div>;
+
+    if (isError) return <div className="text-center py-20 text-red-500 font-bold bg-red-50 rounded-3xl border border-red-100 italic">Error loading products. Check your connection.</div>;
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <h2 className="text-3xl font-bold text-green-dark">Product Management</h2>
-                <Link
-                    to="/admin/products/create"
-                    className="flex items-center gap-2 bg-green-dark text-cream px-4 py-2 rounded-lg hover:bg-green-medium transition-colors shadow-md"
-                >
-                    <FaPlus /> Add New Product
-                </Link>
+        <div className="space-y-10">
+            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8">
+                <div>
+                    <h2 className="text-4xl font-black text-green-dark tracking-tight mb-2">Inventory Management</h2>
+                    <p className="text-green-dark/40 font-bold text-sm tracking-widest uppercase ml-1">Total Products: {productsData?.total || 0}</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row w-full xl:w-auto gap-4">
+                    <div className="relative group flex-1 sm:w-80">
+                        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-green-dark/30 group-focus-within:text-green-medium transition-colors" />
+                        <input
+                            type="text"
+                            placeholder="Search Inventory..."
+                            className="w-full pl-12 pr-4 py-4 bg-white/60 backdrop-blur-md border border-green-light rounded-2xl focus:ring-4 focus:ring-green-medium/10 focus:border-green-medium outline-none transition-all text-green-dark font-medium"
+                            value={displaySearch}
+                            onChange={(e) => setDisplaySearch(e.target.value)}
+                        />
+                    </div>
+
+                    <Link
+                        to="/admin/products/create"
+                        className="flex items-center justify-center gap-2 bg-green-dark text-cream px-8 py-4 rounded-2xl hover:bg-green-medium transition-all shadow-xl hover:-translate-y-1 font-black whitespace-nowrap"
+                    >
+                        <FaPlus /> Add Product
+                    </Link>
+                </div>
             </div>
 
-            {/* Search Bar */}
-            <div className="relative">
-                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full pl-10 pr-4 py-2 border border-green-light rounded-lg focus:outline-none focus:ring-2 focus:ring-green-medium"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </div>
-
-            {/* Table */}
-            <div className="bg-white rounded-xl shadow-lg border border-green-light overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-green-light/30 text-green-dark uppercase text-sm">
-                            <tr>
-                                <th className="p-4 border-b border-green-light">Product</th>
-                                <th className="p-4 border-b border-green-light">Category</th>
-                                <th className="p-4 border-b border-green-light">Price</th>
-                                <th className="p-4 border-b border-green-light text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredProducts.length > 0 ? (
-                                filteredProducts.map((product) => (
-                                    <tr key={product._id} className="hover:bg-green-light/10 transition-colors">
-                                        <td className="p-4 border-b border-green-light flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded overflow-hidden bg-gray-100 border border-gray-200">
+            {/* Table Container */}
+            <div className="bg-white/40 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-white/40 overflow-hidden overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                        <tr className="bg-green-dark text-cream">
+                            <th className="p-8 font-black uppercase tracking-widest text-[0.65rem]">Product Details</th>
+                            <th className="p-8 font-black uppercase tracking-widest text-[0.65rem]">Category</th>
+                            <th className="p-8 font-black uppercase tracking-widest text-[0.65rem]">Pricing</th>
+                            <th className="p-8 font-black uppercase tracking-widest text-[0.65rem] text-center">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-green-light/10">
+                        {products.length > 0 ? (
+                            products.map((product) => (
+                                <tr key={product._id} className="group hover:bg-white/40 transition-all duration-300">
+                                    <td className="p-8">
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white shadow-lg border border-green-light/20 shrink-0 group-hover:scale-105 transition-transform duration-500">
                                                 <img
                                                     src={getImageUrl(product.image)}
                                                     alt={product.title}
                                                     className="w-full h-full object-cover"
-                                                    onError={(e) => e.target.src = 'https://via.placeholder.com/48'}
+                                                    onError={(e) => e.target.src = 'https://via.placeholder.com/80'}
                                                 />
                                             </div>
-                                            <div>
-                                                <p className="font-semibold text-gray-800">{product.title}</p>
-                                                <p className="text-xs text-gray-500">ID: {product._id}</p>
+                                            <div className="min-w-0">
+                                                <p className="font-black text-green-dark text-lg truncate group-hover:text-green-medium transition-colors">{product.title}</p>
+                                                <p className="text-[0.65rem] font-bold text-green-dark/30 tracking-widest uppercase mt-1">ID: #{product._id.slice(-8)}</p>
                                             </div>
-                                        </td>
-                                        <td className="p-4 border-b border-green-light text-gray-600">
+                                        </div>
+                                    </td>
+                                    <td className="p-8">
+                                        <span className="px-4 py-2 bg-green-light/20 text-green-dark rounded-full text-xs font-black uppercase tracking-widest border border-green-light/30">
                                             {product.catagory?.catagoryName || 'Uncategorized'}
-                                        </td>
-                                        <td className="p-4 border-b border-green-light font-medium text-gray-800">
-                                            ${product.price}
-                                        </td>
-                                        <td className="p-4 border-b border-green-light">
-                                            <div className="flex justify-center gap-3">
-                                                <Link
-                                                    to={`/admin/products/edit/${product._id}`}
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                                                    title="Edit"
-                                                >
-                                                    <FaEdit />
-                                                </Link>
-                                                <button
-                                                    onClick={() => handleDelete(product._id)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                                                    title="Delete"
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="4" className="p-6 text-center text-gray-500">
-                                        No products found.
+                                        </span>
+                                    </td>
+                                    <td className="p-8">
+                                        <p className="text-xl font-black text-green-dark">₹{product.price}</p>
+                                        <p className="text-[0.65rem] text-green-dark/30 font-bold uppercase tracking-widest">List Price</p>
+                                    </td>
+                                    <td className="p-8">
+                                        <div className="flex justify-center gap-4">
+                                            <Link
+                                                to={`/admin/products/edit/${product._id}`}
+                                                className="w-12 h-12 flex items-center justify-center bg-blue-500/10 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30"
+                                                title="Edit Listing"
+                                            >
+                                                <FaEdit size={18} />
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(product._id)}
+                                                className="w-12 h-12 flex items-center justify-center bg-red-500/10 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/30"
+                                                title="Remove Product"
+                                            >
+                                                <FaTrash size={18} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="4" className="p-20 text-center">
+                                    <div className="flex flex-col items-center gap-4 opacity-30">
+                                        <FaBox size={60} />
+                                        <p className="font-black text-xl uppercase tracking-widest">No matching products</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
-                {/* Pagination */}
-                <div className="p-4 flex justify-between items-center border-t border-green-light bg-gray-50">
+            {/* Improved Pagination */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4">
+                <p className="text-sm font-bold text-green-dark/40 uppercase tracking-[0.2em]">
+                    Showing Page <span className="text-green-dark !opacity-100">{page}</span> of <span className="text-green-dark !opacity-100">{totalPages}</span>
+                </p>
+
+                <div className="flex gap-4">
                     <button
                         onClick={() => setPage(p => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className="px-4 py-2 bg-white border border-green-medium rounded hover:bg-green-light disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-8 py-3 bg-white/60 backdrop-blur-md border border-green-light rounded-2xl text-green-dark font-black text-sm uppercase tracking-widest hover:bg-green-dark hover:text-cream transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg active:scale-95"
                     >
-                        Previous
+                        Prev
                     </button>
-                    <span className="text-gray-600">Page {page} of {totalPages}</span>
                     <button
-                        onClick={() => setPage(p => Math.max(1, p + 1))} // logic for max page needed really but safe for now
+                        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                         disabled={page >= totalPages}
-                        className="px-4 py-2 bg-white border border-green-medium rounded hover:bg-green-light disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-8 py-3 bg-white/60 backdrop-blur-md border border-green-light rounded-2xl text-green-dark font-black text-sm uppercase tracking-widest hover:bg-green-dark hover:text-cream transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg active:scale-95"
                     >
                         Next
                     </button>

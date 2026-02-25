@@ -79,7 +79,7 @@ export default function ProductCard(props) {
 
       {/* Buy Now */}
       <Link to={`/item?id=${props.id}`} onClick={(e) => e.stopPropagation()}>
-        <button className="w-full mt-2 bg-green-dark text-cream py-1 rounded-md hover:bg-green-medium transition font-medium">
+        <button className="w-full mt-2 bg-green-dark text-cream py-1 rounded-md hover:bg-amber-500 transition-colors duration-200 font-medium">
           Buy Now
         </button></Link>
     </div>

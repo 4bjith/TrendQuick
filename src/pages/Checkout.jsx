@@ -2,32 +2,65 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useMutation } from "@tanstack/react-query";
+import api from "../api/axiosClient";
+import useCartStore from "../zustand/Cart";
+import { useAuth } from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
-/**
- * Checkout page – includes shipping address and payment sections.
- * Designed with a premium glass‑morphism style and Tailwind CSS utilities.
- */
 export default function Checkout() {
     const navigate = useNavigate();
+    const { items, clearCart } = useCartStore();
+    const { user } = useAuth();
 
     // ----- Shipping address state -----
     const [shipping, setShipping] = useState({
         fullName: "",
+        phone: "",
         address1: "",
         address2: "",
         city: "",
         state: "",
         zip: "",
         country: "",
-        phone: "",
     });
 
-    // ----- Payment state -----
-    const [payment, setPayment] = useState({
-        cardNumber: "",
-        expiry: "",
-        cvv: "",
-        nameOnCard: "",
+    const [cashfree, setCashfree] = useState(null);
+
+    React.useEffect(() => {
+        if (window.Cashfree) {
+            setCashfree(window.Cashfree({ mode: "sandbox" }));
+        }
+    }, []);
+
+    const orderMutation = useMutation({
+        mutationFn: async (orderData) => {
+            const res = await api.post("/orders", orderData);
+            return res.data;
+        },
+        onSuccess: async (data) => {
+            try {
+                // Request payment session from backend
+                const payRes = await api.post("/payment", { orderId: data._id });
+
+                if (payRes.data.success && cashfree) {
+                    const checkoutOptions = {
+                        paymentSessionId: payRes.data.payment_session_id,
+                        redirectTarget: "_self", // Redirects to return_url defined in backend
+                    };
+                    cashfree.checkout(checkoutOptions);
+                    clearCart();
+                } else {
+                    toast.error("Failed to initiate payment. Please try again.");
+                }
+            } catch (err) {
+                console.error("Payment Error:", err);
+                toast.error("Error creating payment session.");
+            }
+        },
+        onError: (err) => {
+            toast.error(err.response?.data?.error || "Failed to place order. Please try again.");
+        }
     });
 
     // ----- Handlers -----
@@ -36,18 +69,37 @@ export default function Checkout() {
         setShipping((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handlePaymentChange = (e) => {
-        const { name, value } = e.target;
-        setPayment((prev) => ({ ...prev, [name]: value }));
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Placeholder – in a real app you’d send data to the backend.
-        console.log("Shipping:", shipping);
-        console.log("Payment:", payment);
-        alert("Order placed! 🎉");
-        navigate("/"); // redirect to home after checkout
+
+        if (items.length === 0) {
+            toast.error("Your cart is empty!");
+            return;
+        }
+
+        if (!user) {
+            toast.warn("Please log in to place an order.");
+            return;
+        }
+
+        const [fname, ...lnameArr] = shipping.fullName.split(" ");
+        const lname = lnameArr.join(" ") || ".";
+
+        const orderData = {
+            userId: user.id || user._id,
+            email: user.email,
+            phone: shipping.phone,
+            address: `${shipping.address1}, ${shipping.address2 ? shipping.address2 + ", " : ""}${shipping.city}, ${shipping.state}, ${shipping.zip}, ${shipping.country}`,
+            fname: fname,
+            lname: lname,
+            orderedItems: items.map(item => ({
+                pid: item._id,
+                qty: item.quantity
+            }))
+        };
+
+        orderMutation.mutate(orderData);
     };
 
     const inputClasses = "w-full px-4 py-3 bg-white/70 backdrop-blur-sm rounded-lg border border-green-light focus:outline-none focus:ring-2 focus:ring-green-medium transition text-green-dark placeholder-green-dark/50";
@@ -148,56 +200,28 @@ export default function Checkout() {
                         </div>
                     </section>
 
-                    {/* ----- Payment Details ----- */}
+                    {/* ----- Order Summary (Replacing Payment Details) ----- */}
                     <section className="bg-white/40 backdrop-blur-lg rounded-xl p-8 shadow-lg border border-white/40">
                         <h2 className="text-2xl font-semibold text-green-dark mb-6">
-                            Payment Details
+                            Order Summary
                         </h2>
-
-                        <div className="grid gap-4">
-                            <input
-                                type="text"
-                                name="cardNumber"
-                                placeholder="Card Number"
-                                value={payment.cardNumber}
-                                onChange={handlePaymentChange}
-                                required
-                                className={inputClasses}
-                                maxLength={19}
-                            />
-                            <div className="grid gap-4 md:grid-cols-2">
-                                <input
-                                    type="text"
-                                    name="expiry"
-                                    placeholder="MM/YY"
-                                    value={payment.expiry}
-                                    onChange={handlePaymentChange}
-                                    required
-                                    className={inputClasses}
-                                    maxLength={5}
-                                />
-                                <input
-                                    type="password"
-                                    name="cvv"
-                                    placeholder="CVV"
-                                    value={payment.cvv}
-                                    onChange={handlePaymentChange}
-                                    required
-                                    className={inputClasses}
-                                    maxLength={4}
-                                />
+                        <div className="space-y-4">
+                            {items.map((item) => (
+                                <div key={item._id} className="flex justify-between text-green-dark">
+                                    <span>{item.name} (x{item.quantity})</span>
+                                    <span>₹{item.price * item.quantity}</span>
+                                </div>
+                            ))}
+                            <div className="border-t border-green-light pt-4 mt-4 flex justify-between font-bold text-xl text-green-dark">
+                                <span>Total Amount</span>
+                                <span>₹{items.reduce((acc, item) => acc + (item.price * item.quantity), 0)}</span>
                             </div>
-                            <input
-                                type="text"
-                                name="nameOnCard"
-                                placeholder="Name on Card"
-                                value={payment.nameOnCard}
-                                onChange={handlePaymentChange}
-                                required
-                                className={inputClasses}
-                            />
                         </div>
+                        <p className="mt-8 text-sm text-green-dark/70 text-center italic">
+                            You will be redirected to our secure payment gateway (Cashfree) to complete your transaction.
+                        </p>
                     </section>
+
 
                     {/* ----- Submit Button ----- */}
                     <button

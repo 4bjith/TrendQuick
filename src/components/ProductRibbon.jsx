@@ -64,12 +64,12 @@ export default function ProductRibbon() {
         {items.slice(0, 4).map((item) => (
           <div
             key={item._id}
-            className=" h-[380px] bg-[#f4f0e1]  rounded-xl shadow hover:shadow-lg transition overflow-hidden border border-green-light/50"
+            className=" h-[380px] bg-[#ffffff]  rounded-xl shadow  hover:shadow-lg transition overflow-hidden border border-green-light/50"
           >
             {/* Product Image */}
             <div className="relative bg-white m-2">
               <img
-                src={item.image.startsWith('http')?item.image : `${BASE_URL}/${item.image}` || "https://via.placeholder.com/400"}
+                src={item.image.startsWith('http') ? item.image : `${BASE_URL}/${item.image}` || "https://via.placeholder.com/400"}
                 alt={item.title}
                 className="w-full h-[170px] sm:h-[180px] object-cover"
               />
@@ -110,7 +110,8 @@ export default function ProductRibbon() {
               </div>
 
               {/* Add Button */}
-              <button className="mt-4 w-full flex items-center justify-center gap-2 bg-green-dark text-cream py-2 rounded-lg hover:bg-green-medium transition text-sm font-medium">
+              <button className="mt-4 w-full flex items-center justify-center gap-2 bg-green-dark text-cream py-2 rounded-lg hover:bg-amber-500
+               transition-colors duration-200 text-sm font-medium">
                 <FaShoppingCart size={15} /> Add
               </button>
             </div>
