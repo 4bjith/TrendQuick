@@ -21,6 +21,8 @@ import AdminUpdateProduct from "./admin/AdminUpdateProduct";
 import AdminCategories from "./admin/AdminCategories";
 import AdminOrders from "./admin/AdminOrders";
 import AdminAnalytics from "./admin/AdminAnalytics";
+import AdminUsers from "./admin/AdminUsers";
+import AdminLogs from "./admin/AdminLogs";
 import Search from "./pages/Search";
 import WhishList from "./pages/WhishList";
 
@@ -47,11 +49,13 @@ function Router() {
         <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<AdminAnalytics />} />
           <Route path="sales-analytics" element={<AdminAnalytics />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="products/create" element={<AdminCreateProduct />} />
-          <Route path="products/edit/:id" element={<AdminUpdateProduct />} />
-          <Route path="categories" element={<AdminCategories />} />
-          <Route path="orders" element={<AdminOrders />} />
+          <Route path="dashboard/product" element={<AdminProducts />} />
+          <Route path="dashboard/product/create" element={<AdminCreateProduct />} />
+          <Route path="dashboard/product/edit/:id" element={<AdminUpdateProduct />} />
+          <Route path="dashboard/category" element={<AdminCategories />} />
+          <Route path="dashboard/order" element={<AdminOrders />} />
+          <Route path="dashboard/users" element={<AdminUsers />} />
+          <Route path="dashboard/logs" element={<AdminLogs />} />
         </Route>
 
       </Routes>

@@ -55,6 +55,8 @@
 
   --color-foreground: #18181b;
   --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
 }
 
 @layer base {
@@ -68,12 +70,14 @@
   }
 
   .dark {
-    --color-background: #09090b;
-    --color-foreground: #f4f4f5;
-    --color-cream: #18181b;
-    --color-green-light: #27272a;
-    --color-green-medium: #3f3f46;
+    --color-background: #050505;
+    --color-foreground: #efefef;
+    --color-cream: #121212;
+    --color-green-light: #2a2a2a;
+    --color-green-medium: #444444;
     --color-green-dark: #ffffff;
+    --color-surface: #18181b;
+    --color-border: #27272a;
   }
 
   body {

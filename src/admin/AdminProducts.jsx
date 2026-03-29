@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import api from '../api/axiosClient';
@@ -85,7 +85,7 @@ const AdminProducts = () => {
                     </div>
 
                     <Link
-                        to="/admin/products/create"
+                        to="/admin/dashboard/product/create"
                         className="flex items-center justify-center gap-2 bg-green-dark text-cream px-8 py-4 rounded-2xl hover:bg-green-medium transition-all shadow-xl hover:-translate-y-1 font-black whitespace-nowrap"
                     >
                         <FaPlus /> Add Product
@@ -104,50 +104,61 @@ const AdminProducts = () => {
                             <th className="p-8 font-black uppercase tracking-widest text-[0.65rem] text-center">Operations</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-green-light/10">
+                    <tbody className="divide-y-0">
                         {products.length > 0 ? (
                             products.map((product) => (
-                                <tr key={product._id} className="group hover:bg-white/40 transition-all duration-300">
-                                    <td className="p-8">
-                                        <div className="flex items-center gap-6">
-                                            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white shadow-lg border border-green-light/20 shrink-0 group-hover:scale-105 transition-transform duration-500">
+                                <tr key={product._id} className="group hover:bg-white/60 transition-all duration-300 border-b border-green-light/30 last:border-0 hover:shadow-inner">
+                                    <td className="p-10">
+                                        <div className="flex items-center gap-8">
+                                            <div className="w-24 h-24 rounded-3xl overflow-hidden bg-white shadow-2xl border-2 border-green-light/10 shrink-0 group-hover:scale-110 transition-transform duration-700 hover:rotate-2">
                                                 <img
                                                     src={getImageUrl(product.image)}
                                                     alt={product.title}
                                                     className="w-full h-full object-cover"
-                                                    onError={(e) => e.target.src = 'https://via.placeholder.com/80'}
+                                                    onError={(e) => e.target.src = 'https://via.placeholder.com/150'}
                                                 />
                                             </div>
-                                            <div className="min-w-0">
-                                                <p className="font-black text-green-dark text-lg truncate group-hover:text-green-medium transition-colors">{product.title}</p>
-                                                <p className="text-[0.65rem] font-bold text-green-dark/30 tracking-widest uppercase mt-1">ID: #{product._id.slice(-8)}</p>
+                                            <div className="min-w-0 max-w-[320px]">
+                                                <p className="font-black text-green-dark text-lg whitespace-normal break-words leading-tight group-hover:text-green-medium transition-colors tracking-tight">{product.title}</p>
+                                                <div className="flex items-center gap-3 mt-3">
+                                                    <p className="text-[0.65rem] font-black text-green-dark/20 tracking-[0.2em] uppercase bg-green-light/5 px-2.5 py-1 rounded-md">REF: #{product._id.slice(-8).toUpperCase()}</p>
+                                                    {product.countInStock <= 5 && (
+                                                        <span className="text-[0.6rem] font-black text-red-500 bg-red-50 px-3 py-1 rounded-lg animate-pulse uppercase tracking-widest shrink-0">Low Stock</span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="p-8">
-                                        <span className="px-4 py-2 bg-green-light/20 text-green-dark rounded-full text-xs font-black uppercase tracking-widest border border-green-light/30">
-                                            {product.catagory?.catagoryName || 'Uncategorized'}
-                                        </span>
+                                    <td className="p-10">
+                                        <div className="flex flex-col gap-2">
+                                            <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-light/10 text-green-dark rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] border border-green-light/30 w-fit">
+                                                <span className="w-2 h-2 bg-green-medium rounded-full"></span>
+                                                {product.catagory?.catagoryName || 'Uncategorized'}
+                                            </span>
+                                            <p className="text-[0.6rem] font-bold text-green-dark/20 uppercase tracking-widest ml-1">Asset Sector</p>
+                                        </div>
                                     </td>
-                                    <td className="p-8">
-                                        <p className="text-xl font-black text-green-dark">₹{product.price}</p>
-                                        <p className="text-[0.65rem] text-green-dark/30 font-bold uppercase tracking-widest">List Price</p>
+                                    <td className="p-10">
+                                        <div className="bg-green-light/5 p-4 rounded-[1.5rem] border border-green-light/10 w-fit group-hover:bg-white/80 transition-all shadow-inner">
+                                            <p className="text-2xl font-black text-green-dark tracking-tighter">₹{product.price}</p>
+                                            <p className="text-[0.65rem] text-green-dark/30 font-bold uppercase tracking-widest mt-1">Valuation</p>
+                                        </div>
                                     </td>
-                                    <td className="p-8">
-                                        <div className="flex justify-center gap-4">
+                                    <td className="p-10">
+                                        <div className="flex justify-center gap-5">
                                             <Link
-                                                to={`/admin/products/edit/${product._id}`}
-                                                className="w-12 h-12 flex items-center justify-center bg-blue-500/10 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30"
-                                                title="Edit Listing"
+                                                to={`/admin/dashboard/product/edit/${product._id}`}
+                                                className="w-14 h-14 flex items-center justify-center bg-blue-500/10 text-blue-600 rounded-[1.25rem] hover:bg-blue-600 hover:text-white transition-all duration-500 hover:shadow-[0_10px_30px_rgba(59,130,246,0.4)] hover:-translate-y-1 active:scale-95"
+                                                title="Modify Asset"
                                             >
-                                                <FaEdit size={18} />
+                                                <FaEdit size={20} />
                                             </Link>
                                             <button
                                                 onClick={() => handleDelete(product._id)}
-                                                className="w-12 h-12 flex items-center justify-center bg-red-500/10 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/30"
-                                                title="Remove Product"
+                                                className="w-14 h-14 flex items-center justify-center bg-red-500/10 text-red-500 rounded-[1.25rem] hover:bg-red-500 hover:text-white transition-all duration-500 hover:shadow-[0_10px_30px_rgba(239,68,68,0.4)] hover:-translate-y-1 active:scale-95"
+                                                title="Purge Entry"
                                             >
-                                                <FaTrash size={18} />
+                                                <FaTrash size={20} />
                                             </button>
                                         </div>
                                     </td>

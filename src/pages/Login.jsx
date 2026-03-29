@@ -16,6 +16,7 @@ export default function Login() {
     const navigate = useNavigate();   // ⬅ correct name (lowercase n)
 
     const setToken = useUserStore((state) => state.setToken);
+    const setUser = useUserStore((state) => state.setUser);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -41,8 +42,9 @@ export default function Login() {
             }
 
             // Handle success result
-            if (res.data.status === "Login done") {
+            if (res.data.status === "success") {
                 setToken(res.data.token);
+                setUser(res.data.user);
                 toast.success("Login successful ✔️");
 
                 setLoading(false);

@@ -20,7 +20,7 @@ const Cart = () => {
                 <h1 className="text-3xl md:text-4xl font-bold mb-8 text-green-dark">Shopping Cart</h1>
 
                 {items.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16 bg-white/80 rounded-lg shadow-sm">
+                    <div className="flex flex-col items-center justify-center py-16 bg-surface/80 rounded-lg shadow-sm">
                         <div className="w-24 h-24 bg-green-light/30 rounded-full flex items-center justify-center mb-6">
                             <span className="text-4xl">🛒</span>
                         </div>
@@ -40,7 +40,7 @@ const Cart = () => {
                             {items.map((item) => (
                                 <div
                                     key={item._id}
-                                    className="bg-white/90 p-4 rounded-xl shadow-sm border border-green-light flex flex-col sm:flex-row items-center gap-4 transition-all hover:shadow-md"
+                                    className="bg-surface/90 p-4 rounded-xl shadow-sm border border-green-light dark:border-green-light/10 flex flex-col sm:flex-row items-center gap-4 transition-all hover:shadow-md"
                                 >
                                     {/* Product Image */}
                                     <div className="w-full sm:w-24 h-24 shrink-0 bg-gray-100 rounded-lg overflow-hidden">
@@ -65,7 +65,7 @@ const Cart = () => {
                                     </div>
 
                                     {/* Quantity Controls */}
-                                    <div className="flex items-center gap-3 bg-cream px-3 py-1.5 rounded-lg border border-green-light">
+                                    <div className="flex items-center gap-3 bg-background px-3 py-1.5 rounded-lg border border-green-light dark:border-green-light/10">
                                         <button
                                             onClick={() => decreaseQty(item._id)}
                                             className="p-1 hover:text-red-500 transition-colors disabled:opacity-50"
@@ -97,7 +97,7 @@ const Cart = () => {
 
                         {/* Order Summary */}
                         <div className="lg:w-1/3">
-                            <div className="bg-white/90 p-6 rounded-xl shadow-sm border border-green-light sticky top-24">
+                            <div className="bg-surface/90 p-6 rounded-xl shadow-sm border border-green-light dark:border-green-light/10 sticky top-24">
                                 <h2 className="text-xl font-bold text-green-dark mb-6">Order Summary</h2>
 
                                 <div className="space-y-4 mb-6">

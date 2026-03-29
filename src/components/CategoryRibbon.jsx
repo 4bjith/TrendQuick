@@ -23,14 +23,14 @@ export default function CategoryRibbon() {
   }, []);
 
   return (
-    <div className="w-full py-10 bg-cream text-green-dark px-6 sm:px-10 md:px-0">
+    <div className="w-full py-16 bg-background text-foreground transition-colors duration-300 px-6 sm:px-10 md:px-0">
       {/* Section Heading */}
       <div className="flex flex-col items-center mb-10 text-center">
-        <p className="text-sm tracking-widest text-green-medium font-semibold">
+        <p className="text-sm tracking-widest text-green-medium font-bold uppercase">
           SHOP BY CATEGORY
         </p>
-        <h1 className="text-3xl sm:text-4xl font-bold mt-2 text-green-dark">Popular Categories</h1>
-        <p className="text-green-dark/70 mt-2 max-w-lg">
+        <h1 className="text-3xl sm:text-4xl font-extrabold mt-2 text-foreground tracking-tight">Popular Categories</h1>
+        <p className="text-foreground/60 mt-2 max-w-lg font-medium">
           Browse our most popular product categories and find exactly what you need.
         </p>
       </div>
@@ -40,7 +40,7 @@ export default function CategoryRibbon() {
         {categories.slice(0, 3).map((item) => (
           <div
             key={item._id}
-            className="relative h-[300px] sm:h-[340px] rounded-xl overflow-hidden shadow-md group cursor-pointer border border-green-light"
+            className="relative h-[300px] sm:h-[340px] rounded-2xl overflow-hidden shadow-md group cursor-pointer border border-border transition-all hover:shadow-xl hover:-translate-y-1"
           >
             {/* Background Image */}
             <img
@@ -56,7 +56,7 @@ export default function CategoryRibbon() {
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent"></div>
 
             {/* Bottom Text + Icon */}
-            <div onClick={() => { navigate(`/products?category=${item.catagoryName}`) }} className="absolute bottom-5 left-5 flex items-center gap-2  text-cream font-medium text-lg">
+            <div onClick={() => { navigate(`/products?category=${item.catagoryName}`) }} className="absolute bottom-6 left-6 flex items-center gap-3 text-white font-bold text-xl drop-shadow-lg z-10 transition-transform group-hover:scale-105">
               <span>{item.catagoryName}</span>
               <IoMdArrowRoundForward className="text-2xl group-hover:translate-x-1 transition-transform" />
             </div>

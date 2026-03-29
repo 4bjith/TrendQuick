@@ -25,6 +25,7 @@ export default function AllProducts() {
   const [select, setSelect] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [priceRange, setPriceRange] = useState(0);
+  const [viewMode, setViewMode] = useState("grid"); // "grid" or "list"
   const location = useLocation();
   const categoryName = new URLSearchParams(location.search).get("category");
 
@@ -45,12 +46,12 @@ export default function AllProducts() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["products", page, select, priceRange],
+    queryKey: ["products", page, select, priceRange, sortOrder],
     queryFn: async () => {
-      const res = await api.get(`/product?page=${page}&limit=8&category=${select}&maxPrice=${priceRange}`);
+      const res = await api.get(`/product?page=${page}&limit=8&category=${select}&maxPrice=${priceRange}&sort=${sortOrder}`);
       return res.data;
     },
-    keepPreviousData: true,
+    placeholderData: (previousData) => previousData,
   });
 
   // Fetch categories
@@ -70,24 +71,6 @@ export default function AllProducts() {
     }
   }, [categoryData]);
 
-  if (isError) {
-    return (
-      <div className="min-h-screen flex flex-col bg-cream">
-        <Navbar />
-        <div className="flex-1 flex flex-col justify-center items-center text-red-600 gap-4">
-          <span className="text-5xl">⚠️</span>
-          <p className="font-bold text-xl">Error loading products.</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-2 bg-green-dark text-white rounded-lg hover:bg-green-medium transition-colors"
-          >
-            Try Again
-          </button>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   const totalPages = products?.totalPages || 1;
   const nextPage = () => page < totalPages && setPage(page + 1);
@@ -98,10 +81,10 @@ export default function AllProducts() {
       <Navbar />
 
       {/* PAGE HEADER */}
-      <section className="w-full bg-white/50 backdrop-blur-sm py-10 px-4 text-center md:text-left border-b border-green-light">
+      <section className="w-full bg-surface/50 backdrop-blur-sm py-10 px-4 text-center md:text-left border-b border-green-light dark:border-green-light/10">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-green-dark">Shop Our Collection</h1>
-          <p className="text-green-dark/70 mt-2">
+          <h1 className="text-4xl font-extrabold text-green-dark dark:text-foreground tracking-tight">Shop Our Collection</h1>
+          <p className="text-green-dark/60 dark:text-foreground/60 mt-2 font-medium">
             {isLoading ? (
               <span className="inline-block w-48 h-5 bg-gray-200 animate-pulse rounded"></span>
             ) : (
@@ -113,9 +96,9 @@ export default function AllProducts() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 flex flex-col md:flex-row gap-10">
         {/* SIDEBAR */}
-        <aside className="hidden md:block w-72 shrink-0 border-r border-green-light/30 pr-8">
-          <div className="sticky top-24 space-y-8">
-            <h3 className="text-xl font-bold text-green-dark border-b border-green-light pb-2">Filters</h3>
+        <aside className="hidden md:block w-72 shrink-0 border border-border bg-surface/30 backdrop-blur-sm rounded-3xl p-6 h-fit sticky top-24 shadow-sm">
+          <div className="space-y-8">
+            <h3 className="text-xl font-bold text-green-dark dark:text-foreground border-b border-border pb-3">Filters</h3>
 
             {/* Categories */}
             <div>
@@ -192,7 +175,7 @@ export default function AllProducts() {
         <section className="flex-1 w-full">
 
           {/* TOP BAR */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 border border-green-light/30 p-5 rounded-2xl bg-white/40 backdrop-blur-sm shadow-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 border border-green-light/30 dark:border-green-light/10 p-5 rounded-2xl bg-surface/40 backdrop-blur-sm shadow-sm">
             <p className="text-green-dark font-medium">
               {isLoading ? (
                 <span className="inline-block w-40 h-5 bg-gray-200 animate-pulse rounded"></span>
@@ -206,7 +189,7 @@ export default function AllProducts() {
                 <select
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
-                  className="appearance-none border border-green-light rounded-xl px-5 py-2.5 text-sm font-medium text-green-dark bg-white hover:border-green-medium focus:outline-none focus:ring-2 focus:ring-green-medium/20 transition-all cursor-pointer pr-10"
+                  className="appearance-none border border-green-light dark:border-green-light/20 rounded-xl px-5 py-2.5 text-sm font-medium text-green-dark dark:text-foreground bg-surface hover:border-green-medium focus:outline-none focus:ring-2 focus:ring-green-medium/20 transition-all cursor-pointer pr-10"
                 >
                   <option value="">Sort By: Default</option>
                   <option value="asc">Price: Low to High</option>
@@ -219,11 +202,17 @@ export default function AllProducts() {
                 </div>
               </div>
 
-              <div className="flex border border-green-light rounded-xl overflow-hidden shadow-sm">
-                <button className="p-2.5 bg-green-dark text-white hover:bg-green-medium transition">
+              <div className="flex border border-border rounded-xl overflow-hidden shadow-sm">
+                <button 
+                  onClick={() => setViewMode("grid")}
+                  className={`p-2.5 transition ${viewMode === "grid" ? "bg-green-dark text-white" : "bg-surface text-green-dark dark:text-foreground hover:bg-green-light/20"}`}
+                >
                   <FiGrid size={20} />
                 </button>
-                <button className="p-2.5 bg-white text-green-dark hover:bg-green-light/20 transition border-l border-green-light">
+                <button 
+                  onClick={() => setViewMode("list")}
+                  className={`p-2.5 transition border-l border-border ${viewMode === "list" ? "bg-green-dark text-white" : "bg-surface text-green-dark dark:text-foreground hover:bg-green-light/20"}`}
+                >
                   <FiList size={20} />
                 </button>
               </div>
@@ -232,25 +221,28 @@ export default function AllProducts() {
 
           {/* PRODUCTS GRID */}
           <div
-            className="
-              grid 
-              grid-cols-1 
-              sm:grid-cols-2 
-              lg:grid-cols-3 
-              xl:grid-cols-4 
-              gap-8
-            "
+            className={
+              viewMode === "grid" 
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                : "flex flex-col gap-6"
+            }
           >
             {isLoading ? (
               Array(8).fill(0).map((_, i) => <ProductSkeleton key={i} />)
+            ) : isError ? (
+              <div className="col-span-full flex flex-col justify-center items-center py-20 text-red-500 gap-4">
+                <span className="text-5xl">⚠️</span>
+                <p className="font-bold text-xl">Error loading products.</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-8 py-2 bg-green-dark text-white rounded-lg hover:bg-green-medium transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
             ) : (
               products?.data
-                ?.sort((a, b) => {
-                  if (sortOrder === "asc") return a.price - b.price;
-                  if (sortOrder === "desc") return b.price - a.price;
-                  return 0;
-                })
-                .map((item) => (
+                ?.map((item) => (
                   <div key={item._id} className="hover:scale-[1.02] transition-transform duration-300">
                     <ProductCard
                       id={item._id}
@@ -259,6 +251,7 @@ export default function AllProducts() {
                       image={item.image}
                       discount={item.discount}
                       catagory={item.catagory?.catagoryName}
+                      viewMode={viewMode}
                     />
                   </div>
                 ))
