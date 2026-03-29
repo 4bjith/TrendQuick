@@ -4,10 +4,9 @@ import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 
 const Footer = () => {
     return (
-        <footer className="bg-green-dark dark:bg-zinc-900 text-white pt-12 pb-8 transition-colors duration-300">
+        <footer className="bg-zinc-950 text-white pt-12 pb-8 transition-colors duration-300 border-t border-white/5">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Company Info */}
                     <div>
                         <h3 className="text-2xl font-bold mb-4 text-white">TrendQuik</h3>
                         <p className="text-white/80 text-sm leading-relaxed">
@@ -15,7 +14,6 @@ const Footer = () => {
                         </p>
                     </div>
 
-                    {/* Quick Links */}
                     <div>
                         <h4 className="text-lg font-semibold mb-4 text-white">Quick Links</h4>
                         <ul className="space-y-2">
@@ -34,7 +32,6 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Customer Service */}
                     <div>
                         <h4 className="text-lg font-semibold mb-4 text-white">Customer Service</h4>
                         <ul className="space-y-2">

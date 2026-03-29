@@ -42,7 +42,7 @@ function Home() {
 
   return (
     <>
-      <div className="w-full h-auto bg-cream">
+      <div className="w-full h-auto bg-background text-foreground transition-colors duration-300">
         {/* Navbar section */}
         <Navbar />
 
@@ -77,7 +77,10 @@ function Home() {
               <p className="text-lg md:text-xl text-gray-200 drop-shadow-md">
                 {slides[currentSlide].description}
               </p>
-              <button onClick={() => { navigate("/products") }} className="mt-8 px-8 py-3 bg-white text-green-dark font-bold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-lg">
+              <button 
+                onClick={() => { navigate("/products") }} 
+                className="mt-8 px-10 py-4 bg-white text-zinc-950 font-extrabold text-lg rounded-full hover:bg-green-light hover:scale-105 transition-all duration-300 shadow-xl"
+              >
                 Shop Now
               </button>
             </div>

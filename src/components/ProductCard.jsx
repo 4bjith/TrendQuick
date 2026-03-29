@@ -32,11 +32,18 @@ export default function ProductCard(props) {
   };
 
   return (
-    <div onClick={() => navigate(`/item?id=${props.id}`)} className="relative w-[200px] md:w-[200px] h-[310px] bg-[#ffffffe8] rounded-xl p-3 shrink-0 shadow-sm cursor-pointer border border-green-light hover:shadow-md transition-all">
+    <div 
+      onClick={() => navigate(`/item?id=${props.id}`)} 
+      className={`relative bg-surface rounded-2xl shrink-0 shadow-sm cursor-pointer border border-border hover:border-green-medium transition-all group overflow-hidden ${
+        props.viewMode === "list" 
+          ? "w-full h-auto sm:h-48 flex flex-col sm:flex-row p-4 gap-6" 
+          : "w-full max-w-[280px] h-[400px] flex flex-col p-4"
+      }`}
+    >
       {/* ❤️ Wishlist Icon */}
       <button
         onClick={handleWishlistClick}
-        className="absolute top-2 right-2 bg-white/80 rounded-full shadow p-1 hover:scale-110 transition z-10"
+        className="absolute top-3 right-3 bg-background/80 dark:bg-zinc-800/80 backdrop-blur-sm rounded-full shadow-sm p-2 hover:scale-110 transition z-10"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +51,7 @@ export default function ProductCard(props) {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className={`w-5 h-5 ${isIn ? "text-red-500" : "text-green-medium hover:text-green-dark hover:fill-green-medium"}`}
+          className={`w-5 h-5 ${isIn ? "text-red-500" : "text-green-medium group-hover:text-green-dark dark:group-hover:text-white"}`}
         >
           <path
             strokeLinecap="round"
@@ -55,33 +62,51 @@ export default function ProductCard(props) {
       </button>
 
       {/* Image */}
-      <img
-        src={props.image.startsWith('http') ? props.image : `${BASE_URL}/${props.image}` || "https://via.placeholder.com/200"}
-        alt={props.title}
-        className="w-full h-[150px] object-cover rounded-lg bg-gray-100"
-      />
+      <div className={`${props.viewMode === "list" ? "w-full sm:w-40 h-40" : "w-full h-48"} bg-white/50 dark:bg-zinc-900/50 rounded-xl overflow-hidden flex items-center justify-center shrink-0`}>
+        <img
+          src={props.image.startsWith('http') ? props.image : `${BASE_URL}/${props.image}` || "https://via.placeholder.com/200"}
+          alt={props.title}
+          className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+        />
+      </div>
 
-      {/* Title */}
-      <h2 className="font-semibold mt-2 text-sm line-clamp-1 text-green-dark">{props.title}</h2>
+      {/* Content */}
+      <div className={`flex flex-col justify-between grow ${props.viewMode === "list" ? "py-1" : "mt-4"}`}>
+        <div>
+          <div className="flex justify-between items-start gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-green-medium px-2 py-0.5 bg-green-light dark:bg-zinc-800 rounded-md">
+              {props.catagory || "Unknown"}
+            </span>
+          </div>
+          <h2 className="font-bold mt-2 text-base text-green-dark dark:text-foreground line-clamp-2 leading-tight group-hover:text-green-medium transition-colors">
+            {props.title}
+          </h2>
+          
+          <div className="flex items-center gap-1 mt-2">
+            <div className="flex text-yellow-500 text-xs">
+              {[...Array(5)].map((_, i) => <span key={i}>⭐</span>)}
+            </div>
+            <span className="text-[10px] text-green-dark/50 font-semibold">(4.5)</span>
+          </div>
+        </div>
 
-      {/* Rating */}
-      <p className="text-yellow-500 text-sm flex items-center gap-1">
-        ⭐⭐⭐⭐⭐ <span className="text-gray-400 text-xs">(4.5)</span>
-      </p>
-
-      {/* Category */}
-      <p className="text-green-dark/70 text-xs capitalize">
-        {props.catagory || "Unknown Category"}
-      </p>
-
-      {/* Price */}
-      <p className="font-bold text-green-dark mt-1">₹ {props.price}</p>
-
-      {/* Buy Now */}
-      <Link to={`/item?id=${props.id}`} onClick={(e) => e.stopPropagation()}>
-        <button className="w-full mt-2 bg-green-dark text-cream py-1 rounded-md hover:bg-amber-500 transition-colors duration-200 font-medium">
-          Buy Now
-        </button></Link>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xl font-black text-green-dark dark:text-foreground">₹{props.price}</p>
+            {props.discount > 0 && (
+              <p className="text-xs text-green-medium line-through opacity-70">₹{Math.round(props.price * (1 + props.discount / 100))}</p>
+            )}
+          </div>
+          
+          <Link 
+            to={`/item?id=${props.id}`} 
+            onClick={(e) => e.stopPropagation()}
+            className="px-4 py-2 bg-green-dark dark:bg-foreground dark:text-background text-cream text-sm font-bold rounded-lg hover:bg-green-medium dark:hover:bg-green-light transition-colors shadow-sm active:scale-95"
+          >
+            Buy Now
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

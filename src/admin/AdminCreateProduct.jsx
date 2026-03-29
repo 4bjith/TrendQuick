@@ -65,7 +65,7 @@ const AdminCreateProduct = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-products']);
             toast.success("Product created successfully");
-            navigate('/admin/products');
+            navigate('/admin/dashboard/product');
         },
         onError: (err) => {
             console.error(err);
@@ -94,8 +94,8 @@ const AdminCreateProduct = () => {
     return (
         <div className="max-w-4xl mx-auto pb-10">
             <button
-                onClick={() => navigate('/admin/products')}
-                className="flex items-center gap-2 text-gray-600 hover:text-green-dark mb-6 transition-colors"
+                onClick={() => navigate('/admin/dashboard/product')}
+                className="flex items-center gap-2 text-gray-600 hover:text-green-dark mb-6 transition-colors font-black uppercase tracking-widest text-[10px]"
             >
                 <FaArrowLeft /> Back to Products
             </button>

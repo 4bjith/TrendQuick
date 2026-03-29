@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axiosClient';
-import { FaTrash, FaEye, FaSearch, FaCheck } from 'react-icons/fa';
+import { FaTrash, FaEye, FaSearch, FaCheck, FaShoppingCart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 const AdminOrders = () => {
@@ -56,7 +56,7 @@ const AdminOrders = () => {
         }
     };
 
-    const orders = ordersData?.data || [];
+    const orders = Array.isArray(ordersData) ? ordersData : (ordersData?.data || []);
     const totalPages = ordersData?.totalPages || 1;
 
     if (isLoading) return <div className="flex justify-center items-center py-20">
@@ -75,7 +75,8 @@ const AdminOrders = () => {
     );
 
     const getStatusStyle = (status) => {
-        switch (status) {
+        const normalizedStatus = (status || '').toLowerCase();
+        switch (normalizedStatus) {
             case 'delivered': return 'bg-green-500/10 text-green-600 border-green-200';
             case 'pending': return 'bg-yellow-500/10 text-yellow-600 border-yellow-200';
             case 'shipping': return 'bg-blue-500/10 text-blue-600 border-blue-200';
@@ -160,7 +161,7 @@ const AdminOrders = () => {
                                     <div className="flex justify-center gap-3">
                                         <div className="relative group/select">
                                             <select
-                                                value={order.status}
+                                                value={(order.status || '').toLowerCase()}
                                                 onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
                                                 className="absolute inset-0 opacity-0 cursor-pointer z-10"
                                             >

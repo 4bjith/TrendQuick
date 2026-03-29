@@ -17,7 +17,10 @@ const useUserStore = create(
     {
       name: "user-store", // key in localStorage
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ token: state.token }),
+      partialize: (state) => ({ 
+        token: state.token,
+        user: state.user 
+      }),
     }
   )
 );
